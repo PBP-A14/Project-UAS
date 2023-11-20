@@ -56,14 +56,14 @@ Aplikasi ini juga dapat membantu user untuk mengetahui buku mana yang sekiranya 
 **_Modul Aplikasi_**
 
 ##
-**Modul Profile :**
+**Modul Profile : Fatih Raditya Pratama**
 ### 
 
 a.) History Bacaan
 
 b.) Progress Literasi
 ##
-**Modul Authentication :**
+**Modul Authentication : Nibras Itqon Ihsani**
 ###
 a.) Data Akun User dan Admin
 
@@ -71,13 +71,13 @@ b.) Login
 
 c.) Register
 ##
-**Modul Home :**
+**Modul Home : Nibras Itqon Ihsani**
 ###
 a.) List Buku
 
 b.) Search Bar
 ##
-**Modul Admin :**
+**Modul Admin : Mika Ahmad Al Husseini**
 ###
 a.) Add, Remove, dan Edit Buku
 
@@ -87,23 +87,21 @@ c.) Melihat Log
 
 d.) Modul Admin hanya dapat diakses oleh Admin
 ##
-**Modul Literasi :**
+**Modul Literasi : Sarah Nazly Nuraya**
 ###
 a.) Jumlah Buku yang dibaca
 
 b.) Waktu Baca Perhari
 ##
-**Modul Detail Buku :**
+**Modul Detail Buku : Aliyah Faza Qinthara**
 ###
 a.) Views, Likes
 
 b.) Review Buku
 
-c.) Add Bookmark (button-nya)
+c.) Rating Buku
 
-d.) Rating Buku
-
-e.) Sinopsis Buku
+d.) Sinopsis Buku
 </br>
 </details>
 
@@ -160,9 +158,6 @@ History Bacaan
 
 Progress Literasi
 
-****Library (Bookmark)****
-
-Isinya adalah buku-buku yang telah ditambahkan oleh user ke dalam bookmark.
 ##
 **Admin :**
 
@@ -191,29 +186,12 @@ Ketika guest ingin mengakses fitur lainnya, maka sistem akan meminta guest untuk
 <Summary>Alur Integrasi Aplikasi Web</summary>
 <br>
 
-<h2>Setup Authentication pada Django untuk FLutter</h2>
+Langkah-langkah yang dapat dilakukan untuk mengintegrasikan aplikasi flutter dengan aplikasi web :
 
-1. Membuat `django-app` bernama `authentication` pada project Django yang telah dibuat.
-2. Menambahkan `authentication` ke `INSTALLED_APPS` pada *main project* `settings.py` di aplikasi Django.
-3. Menjalankan perintah `pip install django-cors-headers` untuk melakukan install *library* yang dibutuhkan.
-4. Menambahkan `corsheaders` ke `INSTALLED_APPS` pada *main project* `settings.py` di aplikai Django.
-5. Menambahkan `corsheaders.middleware.CorsMiddleware` pada *main project* `settings.py` di aplikasi Django.
-6. Menambahkan variabel berikut pada *main project* `settings.py` di aplikasi Django.
-7. Membuat metode *view* untuk melakukan login pada `authentication/views.py`.
-8. Membuat *file* `urls.py` pada folder `authentication` dan menambahkan URL untuk *routing* terhadap fungsi yang sudah dibuat dengan *endpoint* `login/`.
-9. Menambahkan `path('auth/', include('authentication.urls')),` pada *file* `elibrary/urls.py`.
-
-<h2>Integrasi Sistem Authentication pada Flutter</h2>
-
-1. Install *package* dari pbp yang sudah tersedia
-2. Melakukan modifikasi *root widget* untuk menyediakan `CookieRequest` dengan `Provider`.
-3. Membuat kode dart untuk halaman login.
-
-<h2>Integrasi Form Flutter dengan Django</h2>
-
-1. Menambahkan fungsi *view* baru pada `main/views.py` di aplikasi Django.
-2. Menambahkan *path* baru pada `main/urls.py`.
-3. Pada flutter menghubungkan halaman form dengan `CookieRequest`.
+1. Mengimplementasikan sebuah *wrapper class* dengan menggunakan library *http* dan *map* untuk mendukung penggunaan *cookie-based authentication* pada aplikasi.
+2. Mengimplementasikan REST API pada Django (views.py) dengan menggunakan JsonResponse atau Django JSON Serializer.
+3. Mengimplementasikan desain *front-end* untuk aplikasi berdasarkan desain *website* yang sudah ada sebelumnya.
+4. Melakukan integrasi antara *front-end* dengan *back-end* dengan menggunakan konsep *asynchronous* HTTP.
 
 </br>
 </details>
