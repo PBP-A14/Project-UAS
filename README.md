@@ -30,6 +30,16 @@ Sarah Nazly Nuraya - 2206082581
 
 #
 <details>
+<Summary>Link Berita Acara :</summary>
+<br>
+
+https://docs.google.com/spreadsheets/d/1PBvFeQFRPb2Yx03UilZUCdc5kyhGaUSZKtycV1gVDAM/edit?usp=sharing
+
+</br>
+</details>
+
+#
+<details>
 <Summary>Aplikasi dan manfaatnya</Summary>
 <br>
 Aplikasi E-Library merupakan aplikasi perpustakaan online yang dapat diakses oleh masyarakat dari mana saja. Aplikasi ini dapat memberikan pilihan bacaan kepada user dan juga memberikan rekomendasi buku yang paling populer untuk dibaca. Dengan memanfaatkan aplikasi ini, user dapat meningkatkan minat literasi dan juga dapat mengetahui progress dari literasi yang dimiliki dengan fitur track jumlah buku yang sudah dibaca dan waktu baca buku dalam 1 hari. 
@@ -173,5 +183,37 @@ List Buku
 
 Ketika guest ingin mengakses fitur lainnya, maka sistem akan meminta guest untuk melakukan register atau login terlebih dahulu.
 ##
+</br>
+</details>
+
+#
+<details>
+<Summary>Alur Integrasi Aplikasi Web</summary>
+<br>
+
+<h2>Setup Authentication pada Django untuk FLutter</h2>
+
+1. Membuat `django-app` bernama `authentication` pada project Django yang telah dibuat.
+2. Menambahkan `authentication` ke `INSTALLED_APPS` pada *main project* `settings.py` di aplikasi Django.
+3. Menjalankan perintah `pip install django-cors-headers` untuk melakukan install *library* yang dibutuhkan.
+4. Menambahkan `corsheaders` ke `INSTALLED_APPS` pada *main project* `settings.py` di aplikai Django.
+5. Menambahkan `corsheaders.middleware.CorsMiddleware` pada *main project* `settings.py` di aplikasi Django.
+6. Menambahkan variabel berikut pada *main project* `settings.py` di aplikasi Django.
+7. Membuat metode *view* untuk melakukan login pada `authentication/views.py`.
+8. Membuat *file* `urls.py` pada folder `authentication` dan menambahkan URL untuk *routing* terhadap fungsi yang sudah dibuat dengan *endpoint* `login/`.
+9. Menambahkan `path('auth/', include('authentication.urls')),` pada *file* `elibrary/urls.py`.
+
+<h2>Integrasi Sistem Authentication pada Flutter</h2>
+
+1. Install *package* dari pbp yang sudah tersedia
+2. Melakukan modifikasi *root widget* untuk menyediakan `CookieRequest` dengan `Provider`.
+3. Membuat kode dart untuk halaman login.
+
+<h2>Integrasi Form Flutter dengan Django</h2>
+
+1. Menambahkan fungsi *view* baru pada `main/views.py` di aplikasi Django.
+2. Menambahkan *path* baru pada `main/urls.py`.
+3. Pada flutter menghubungkan halaman form dengan `CookieRequest`.
+
 </br>
 </details>
