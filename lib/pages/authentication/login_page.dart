@@ -123,7 +123,8 @@ class _LoginPageState extends State<LoginPage> {
                         String message = response['message'];
                         String uname = response['username'];
                         if (mounted) {
-                          Navigator.pop(context);
+                          Navigator.pushReplacementNamed(
+                              context, NavigationMenu.routeName);
                           ScaffoldMessenger.of(context)
                             ..hideCurrentSnackBar()
                             ..showSnackBar(SnackBar(
@@ -141,7 +142,8 @@ class _LoginPageState extends State<LoginPage> {
                                 TextButton(
                                   child: const Text('OK'),
                                   onPressed: () {
-                                    Navigator.pushNamed(context, NavigationMenu.routeName);
+                                    Navigator.pushNamed(
+                                        context, NavigationMenu.routeName);
                                   },
                                 ),
                               ],

@@ -55,6 +55,10 @@ class MyApp extends StatelessWidget {
         },
         onGenerateRoute: (settings) {
           switch (settings.name) {
+            // case NavigationMenu.routeName:
+            //   return MaterialPageRoute(
+            //     builder: (context) => const NavigationMenu(),
+            //   );
             case HomePage.routeName:
               return MaterialPageRoute(
                 builder: (context) => const HomePage(),
