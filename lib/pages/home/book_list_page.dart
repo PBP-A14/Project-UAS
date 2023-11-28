@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/enum_resultstate.dart';
+import '../../widgets/filter_button.dart';
 
 class BookListPage extends StatelessWidget {
   static const routeName = '/book-list';
+
   const BookListPage({super.key});
 
   @override
@@ -23,10 +25,13 @@ class BookListPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.chevron_left),
-                Text('Back', style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),)
+                Text(
+                  'Back',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                )
               ],
             ),
           ),
@@ -82,6 +87,10 @@ class BookListPage extends StatelessWidget {
               ),
             ),
             const Padding(
+              padding: EdgeInsets.only(left: 12),
+              child: FilterButton(),
+            ),
+            const Padding(
               padding: EdgeInsets.all(12.0),
               child: Text(
                 'All Books',
@@ -91,6 +100,7 @@ class BookListPage extends StatelessWidget {
                 ),
               ),
             ),
+            const Divider(),
             Expanded(
               child: Consumer<HomeProvider>(
                 builder: (context, data, _) {
@@ -112,7 +122,7 @@ class BookListPage extends StatelessWidget {
                         ),
                       ),
                     );
-                  } else if(data.state == ResultState.error) {
+                  } else if (data.state == ResultState.error) {
                     return Expanded(
                       child: Center(
                         child: Column(
@@ -131,12 +141,12 @@ class BookListPage extends StatelessWidget {
                             ),
                             const Text(
                                 'It seems you are not connected with internet\n'
-                                    'Check your internet and try again',
+                                'Check your internet and try again',
                                 textAlign: TextAlign.center),
                             TextButton(
                               onPressed: () {
                                 Provider.of<HomeProvider>(context,
-                                    listen: false)
+                                        listen: false)
                                     .refresh();
                               },
                               child: const Text('Try again'),
@@ -145,7 +155,7 @@ class BookListPage extends StatelessWidget {
                         ),
                       ),
                     );
-                  }else {
+                  } else {
                     return GridView.count(
                       crossAxisCount: 2,
                       childAspectRatio: 1 / 1.2,

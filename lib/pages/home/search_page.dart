@@ -128,6 +128,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
               ),
+              const Divider(),
               Expanded(
                 child: Consumer<SearchProvider>(
                   builder: (context, data, _) {
