@@ -112,42 +112,60 @@ class _LoginPageState extends State<LoginPage> {
                       String username = _usernameController.text;
                       String password = _passwordController.text;
 
-                      // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-                      final response = await request.login(
-                          "http://127.0.0.1:8000/authentication/mobile-login/", {
-                        'username': username,
-                        'password': password,
-                      });
+                      if (username.isNotEmpty || password.isNotEmpty) {
+                        // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+                        final response = await request.login(
+                            "http://10.0.2.2:8000/authentication/mobile-login/",
+                            {
+                              'username': username,
+                              'password': password,
+                            });
 
-                      if (request.loggedIn) {
-                        String message = response['message'];
-                        String uname = response['username'];
-                        if (mounted) {
-                          Navigator.pushReplacementNamed(
-                              context, NavigationMenu.routeName);
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                content: Text("$message Welcome, $uname.")));
-                        }
-                      } else {
-                        if (mounted) {
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(
-                              const SnackBar(
-                                backgroundColor: Color(0xFFFFDCE0),
-                                behavior: SnackBarBehavior.floating,
-                                content: Text(
-                                  "Incorrect username or password!",
-                                  style: TextStyle(
-                                    color: Colors.red,
+                        if (request.loggedIn) {
+                          String message = response['message'];
+                          String uname = response['username'];
+                          if (mounted) {
+                            Navigator.pushReplacementNamed(
+                                context, NavigationMenu.routeName);
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  content: Text("$message Welcome, $uname.")));
+                          }
+                        } else {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                const SnackBar(
+                                  backgroundColor: Color(0xFFFFDCE0),
+                                  behavior: SnackBarBehavior.floating,
+                                  content: Text(
+                                    "Incorrect username or password!",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
+                              );
+                          }
                         }
+                      } else {
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Color(0xFFFFDCE0),
+                              behavior: SnackBarBehavior.floating,
+                              content: Text(
+                                "Username or password can't be empty!",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          );
                       }
                     },
                     child: const Text('Sign in'),
