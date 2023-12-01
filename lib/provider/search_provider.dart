@@ -52,4 +52,15 @@ class SearchProvider extends ChangeNotifier {
       fetchBookWithQuery(_lastQuery!);
     }
   }
+
+  void sortAZ() {
+    _bookResult.sort((a, b) => a.fields.title.compareTo(b.fields.title));
+    notifyListeners();
+  }
+
+  void sortZA() {
+    _bookResult.sort((a, b) => b.fields.title.compareTo(a.fields.title));
+    notifyListeners();
+  }
+
 }
