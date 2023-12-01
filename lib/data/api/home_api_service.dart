@@ -3,13 +3,12 @@ import 'package:elibrary/data/model/home_book_model.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const baseUrl = '10.0.2.2:8000/';
+  static const baseUrl = '127.0.0.1:8000/';
   static const jsonUrl = 'json/';
   static const searchUrl = 'search/';
 
   Future<List<Book>> getBook() async {
-    var url = Uri.parse(
-        'http://$baseUrl$jsonUrl');
+    var url = Uri.parse('http://$baseUrl$jsonUrl');
     final response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -31,8 +30,7 @@ class ApiService {
   }
 
   Future<List<Book>> searchBook(query) async {
-    var url = Uri.parse(
-        'http://$baseUrl$searchUrl$query/');
+    var url = Uri.parse('http://$baseUrl$searchUrl$query/');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
