@@ -13,7 +13,7 @@ class ApiService {
 
   Future<List<Book>> getBook() async {
     var url = Uri.parse(
-        'https://$baseUrl$jsonUrl');
+        'http://$baseUrl$jsonUrl');
     final response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
