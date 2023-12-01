@@ -4,12 +4,62 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+  // static const baseUrl = 'elibrary-a14-tk.pbp.cs.ui.ac.id/';
   static const baseUrl = '10.0.2.2:8000/';
   static const jsonUrl = 'json/';
   static const searchUrl = 'search/';
+  static const filterAZUrl = 'json/a-z/';
+  static const filterZAUrl = 'json/z-a/';
 
   Future<List<Book>> getBook() async {
-    var url = Uri.parse('http://$baseUrl$jsonUrl');
+    var url = Uri.parse(
+        'https://$baseUrl$jsonUrl');
+    final response = await http.get(
+      url,
+      headers: {"Content-Type": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+      List<Book> bookList = [];
+      for (var d in data) {
+        if (d != null) {
+          bookList.add(Book.fromJson(d));
+        }
+      }
+      return bookList;
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  Future<List<Book>> getBookAZ() async {
+    var url = Uri.parse(
+        'http://$baseUrl$filterAZUrl');
+    final response = await http.get(
+      url,
+      headers: {"Content-Type": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+      List<Book> bookList = [];
+      for (var d in data) {
+        if (d != null) {
+          bookList.add(Book.fromJson(d));
+        }
+      }
+      return bookList;
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  Future<List<Book>> getBookZA() async {
+    var url = Uri.parse(
+        'http://$baseUrl$filterZAUrl');
     final response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -31,7 +81,8 @@ class ApiService {
   }
 
   Future<List<Book>> searchBook(query) async {
-    var url = Uri.parse('http://$baseUrl$searchUrl$query/');
+    var url = Uri.parse(
+        'http://$baseUrl$searchUrl$query/');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},

@@ -1,4 +1,6 @@
+import 'package:elibrary/provider/home_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FilterButton extends StatefulWidget {
   const FilterButton({super.key});
@@ -8,21 +10,78 @@ class FilterButton extends StatefulWidget {
 }
 
 class _FilterButtonState extends State<FilterButton> {
-  bool _isActive = false;
-
   @override
   Widget build(BuildContext context) {
-    if (!_isActive) {
+    final filterProvider = Provider.of<HomeProvider>(context);
+    if (filterProvider.isZAChecked || filterProvider.isAZChecked) {
+      return Row(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                // barrierDismissible: false,
+                builder: (context) {
+                  return const FilterDialog();
+                },
+              );
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.black),
+              foregroundColor: MaterialStateProperty.all(Colors.white),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            child: const Icon(Icons.filter_list),
+          ),
+          const SizedBox(width: 8),
+          if (filterProvider.isAZChecked)
+            ElevatedButton.icon(
+              onPressed: () {
+                Provider.of<HomeProvider>(context, listen: false).resetFilter();
+              },
+              icon: Icon(Icons.clear),
+              label: const Text('A to Z'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.black),
+                foregroundColor: MaterialStateProperty.all(Colors.white),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+          if (filterProvider.isZAChecked)
+            ElevatedButton.icon(
+              onPressed: () {
+                Provider.of<HomeProvider>(context, listen: false).resetFilter();
+              },
+              icon: Icon(Icons.clear),
+              label: const Text('Z to A'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.black),
+                foregroundColor: MaterialStateProperty.all(Colors.white),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      );
+    } else {
       return OutlinedButton(
         onPressed: () {
-          // setState(() {
-          //   _isActive = !_isActive;
-          // });
           showDialog(
             context: context,
             // barrierDismissible: false,
             builder: (context) {
-              return FilterDialog();
+              return const FilterDialog();
             },
           );
         },
@@ -40,50 +99,81 @@ class _FilterButtonState extends State<FilterButton> {
         ),
         child: const Icon(Icons.filter_list),
       );
-    } else {
-      return ElevatedButton(
-        onPressed: () {
-          setState(() {
-            _isActive = !_isActive;
-          });
-        },
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.black),
-          foregroundColor: MaterialStateProperty.all(Colors.white),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-        child: const Icon(Icons.filter_list),
-      );
     }
-  }
-
-  @override
-  void dispose() {
-    _isActive = false;
-    super.dispose();
   }
 }
 
-class FilterDialog extends StatelessWidget {
+class FilterDialog extends StatefulWidget {
   const FilterDialog({super.key});
 
   @override
+  State<FilterDialog> createState() => _FilterDialogState();
+}
+
+class _FilterDialogState extends State<FilterDialog> {
+  @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Column(
+    final filterProvider = Provider.of<HomeProvider>(context);
+
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      title: const Text('Filter'),
+      backgroundColor: const Color(0xFFF1F2F4),
+      surfaceTintColor: Colors.transparent,
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('A to Z'),
-          Divider(),
-          Text('Z to A'),
-          Divider(),
-          Text('None')
+          Row(
+            children: [
+              Checkbox(
+                  checkColor: Colors.white,
+                  activeColor: Colors.black,
+                  value: filterProvider.isAZChecked,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (filterProvider.isZAChecked) {
+                        filterProvider.toggleZA(!filterProvider.isZAChecked);
+                      }
+                      filterProvider.toggleAZ(value!);
+                    });
+                  }),
+              const Text('A to Z'),
+            ],
+          ),
+          Row(
+            children: [
+              Checkbox(
+                  checkColor: Colors.white,
+                  activeColor: Colors.black,
+                  value: filterProvider.isZAChecked,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (filterProvider.isAZChecked) {
+                        filterProvider.toggleAZ(!filterProvider.isAZChecked);
+                      }
+                      filterProvider.toggleZA(value!);
+                    });
+                  }),
+              const Text('Z to A'),
+            ],
+          ),
         ],
       ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            if (filterProvider.isAZChecked) {
+              filterProvider.setFilterAZ();
+            } else if (filterProvider.isZAChecked) {
+              filterProvider.setFilterZA();
+            } else {
+              filterProvider.fetchBook();
+            }
+            Navigator.pop(context);
+          },
+          child: const Text('Close'),
+        )
+      ],
     );
   }
 }
