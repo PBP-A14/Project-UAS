@@ -80,6 +80,7 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
+          const Divider(),
           Consumer<HomeProvider>(
             builder: (context, data, _) {
               if (data.state == ResultState.loading) {

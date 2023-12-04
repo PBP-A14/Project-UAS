@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../data/model/home_book_model.dart';
 
+// TODO: Overflow tp gtw dimana?
+
 class BookBottomSheet extends StatelessWidget {
   final Fields book;
 
@@ -52,6 +54,9 @@ class BookBottomSheet extends StatelessWidget {
                       child: Image.network(
                         'https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg',
                         fit: BoxFit.fitWidth,
+                        errorBuilder: (context, _, __) {
+                          return const Center(child: Text('No Image'));
+                        },
                       ),
                     ),
                   ),
@@ -70,7 +75,7 @@ class BookBottomSheet extends StatelessWidget {
                           ),
                         ),
                         Text(book.authors),
-                        Divider(),
+                        const Divider(),
                         Text('Rating: $newRating'),
                       ],
                     ),
@@ -83,19 +88,50 @@ class BookBottomSheet extends StatelessWidget {
             padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
             child: SizedBox(
               width: double.maxFinite,
-              child: ElevatedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.info_outline_rounded),
-                label: const Text('Detail'),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.black),
-                  foregroundColor: MaterialStateProperty.all(Colors.white),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {},
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.black),
+                        overlayColor:
+                            MaterialStateProperty.resolveWith<Color>((states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            return Colors.black.withOpacity(.1);
+                          }
+                          return Colors.transparent;
+                        }),
+                      ),
+                      child: const Text('Read'),
                     ),
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.info_outline_rounded),
+                      label: const Text('Detail'),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.black),
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

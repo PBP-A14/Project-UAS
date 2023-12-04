@@ -132,22 +132,20 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       } else {
                         if (mounted) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Login failed'),
-                              content: Text(response['message']),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, NavigationMenu.routeName);
-                                  },
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Color(0xFFFFDCE0),
+                                behavior: SnackBarBehavior.floating,
+                                content: Text(
+                                  "Incorrect username or password!",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
                                 ),
-                              ],
-                            ),
-                          );
+                              ),
+                            );
                         }
                       }
                     },

@@ -83,7 +83,7 @@ class _SearchPageState extends State<SearchPage> {
                                       icon: const Icon(Icons.clear),
                                       onPressed: () {
                                         _controller.clear();
-                                        fields = _controller.text;
+                                        // fields = _controller.text;
                                       },
                                     )
                                   : null,
@@ -128,6 +128,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
               ),
+              const Divider(),
               Expanded(
                 child: Consumer<SearchProvider>(
                   builder: (context, data, _) {
