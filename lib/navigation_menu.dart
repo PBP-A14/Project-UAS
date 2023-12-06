@@ -2,6 +2,7 @@ import 'package:elibrary/pages/home/home_page.dart';
 import 'package:elibrary/pages/my_library_page.dart';
 import 'package:elibrary/pages/profile_page.dart';
 import 'package:elibrary/pages/progress_literasi_page.dart';
+import 'package:elibrary/pages/admin_app/admin_app_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -22,6 +23,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
     const MyLibraryPage(),
     const ProgressLiterasiPage(),
     const ProfilePage(),
+    const AdminAppPage(),
   ];
 
   @override
@@ -67,6 +69,10 @@ class _NavigationMenuState extends State<NavigationMenu> {
                   GButton(
                     icon: Icons.person_outline,
                     text: 'Profile',
+                  ),
+                  GButton(
+                    icon: Icons.admin_panel_settings_outlined,
+                    text: 'Admin',
                   ),
                 ],
               ),
