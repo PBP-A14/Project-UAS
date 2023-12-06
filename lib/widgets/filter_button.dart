@@ -16,67 +16,80 @@ class _FilterButtonState extends State<FilterButton> {
     if (filterProvider.isZAChecked || filterProvider.isAZChecked) {
       return Row(
         children: [
-          ElevatedButton(
-            onPressed: () {
+          InkWell(
+            onTap: () {
               showDialog(
                 context: context,
-                // barrierDismissible: false,
+                barrierDismissible: false, // TODO: GK GUNAA??
                 builder: (context) {
                   return const FilterDialog();
                 },
               );
             },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.black),
-              foregroundColor: MaterialStateProperty.all(Colors.white),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(12)),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.filter_list,
+                  color: Colors.white,
                 ),
               ),
             ),
-            child: const Icon(Icons.filter_list),
           ),
           const SizedBox(width: 8),
           if (filterProvider.isAZChecked)
-            ElevatedButton.icon(
-              onPressed: () {
-                Provider.of<HomeProvider>(context, listen: false).resetFilter();
-              },
-              icon: Icon(Icons.clear),
-              label: const Text('A to Z'),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.black),
-                foregroundColor: MaterialStateProperty.all(Colors.white),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.transparent,
+                  border: Border.all(color: Colors.black)),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(18, 8, 12, 8),
+                child: Row(
+                  children: [
+                    const Text('A to Z'),
+                    const SizedBox(width: 8),
+                    InkWell(
+                      onTap: () {
+                        Provider.of<HomeProvider>(context, listen: false)
+                            .resetFilter();
+                      },
+                      child: const Icon(Icons.clear),
+                    )
+                  ],
                 ),
               ),
             ),
           if (filterProvider.isZAChecked)
-            ElevatedButton.icon(
-              onPressed: () {
-                Provider.of<HomeProvider>(context, listen: false).resetFilter();
-              },
-              icon: Icon(Icons.clear),
-              label: const Text('Z to A'),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.black),
-                foregroundColor: MaterialStateProperty.all(Colors.white),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.transparent,
+                  border: Border.all(color: Colors.black)),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(18, 8, 12, 8),
+                child: Row(
+                  children: [
+                    const Text('Z to A'),
+                    const SizedBox(width: 8),
+                    InkWell(
+                      onTap: () {
+                        Provider.of<HomeProvider>(context, listen: false)
+                            .resetFilter();
+                      },
+                      child: const Icon(Icons.clear),
+                    ),
+                  ],
                 ),
               ),
             ),
         ],
       );
     } else {
-      return OutlinedButton(
-        onPressed: () {
+      return InkWell(
+        onTap: () {
           showDialog(
             context: context,
             // barrierDismissible: false,
@@ -85,19 +98,18 @@ class _FilterButtonState extends State<FilterButton> {
             },
           );
         },
-        style: ButtonStyle(
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Container(
+          decoration: BoxDecoration(
+              color: Colors.transparent,
+              border: Border.all(
+                color: Colors.black,
+              ),
+              borderRadius: BorderRadius.circular(12)),
+          child: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Icon(Icons.filter_list),
           ),
-          foregroundColor: MaterialStateProperty.all(Colors.black),
-          overlayColor: MaterialStateProperty.resolveWith<Color>((states) {
-            if (states.contains(MaterialState.pressed)) {
-              return Colors.black.withOpacity(.1);
-            }
-            return Colors.transparent;
-          }),
         ),
-        child: const Icon(Icons.filter_list),
       );
     }
   }
@@ -111,6 +123,17 @@ class FilterDialog extends StatefulWidget {
 }
 
 class _FilterDialogState extends State<FilterDialog> {
+  bool isAZ = false;
+  bool isZA = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final filterProvider = Provider.of<HomeProvider>(context, listen: false);
+    isAZ = filterProvider.isAZChecked;
+    isZA = filterProvider.isZAChecked;
+  }
+
   @override
   Widget build(BuildContext context) {
     final filterProvider = Provider.of<HomeProvider>(context);
@@ -128,13 +151,18 @@ class _FilterDialogState extends State<FilterDialog> {
               Checkbox(
                   checkColor: Colors.white,
                   activeColor: Colors.black,
-                  value: filterProvider.isAZChecked,
+                  // value: filterProvider.isAZChecked,
+                  value: isAZ,
                   onChanged: (bool? value) {
                     setState(() {
-                      if (filterProvider.isZAChecked) {
-                        filterProvider.toggleZA(!filterProvider.isZAChecked);
+                      if (isZA) {
+                        isZA = !isZA;
                       }
-                      filterProvider.toggleAZ(value!);
+                      isAZ = !isAZ;
+                      // if (filterProvider.isZAChecked) {
+                      //   filterProvider.toggleZA(!filterProvider.isZAChecked);
+                      // }
+                      // filterProvider.toggleAZ(value!);
                     });
                   }),
               const Text('A to Z'),
@@ -145,13 +173,18 @@ class _FilterDialogState extends State<FilterDialog> {
               Checkbox(
                   checkColor: Colors.white,
                   activeColor: Colors.black,
-                  value: filterProvider.isZAChecked,
+                  // value: filterProvider.isZAChecked,
+                  value: isZA,
                   onChanged: (bool? value) {
                     setState(() {
-                      if (filterProvider.isAZChecked) {
-                        filterProvider.toggleAZ(!filterProvider.isAZChecked);
+                      if (isAZ) {
+                        isAZ = !isAZ;
                       }
-                      filterProvider.toggleZA(value!);
+                      isZA = !isZA;
+                      // if (filterProvider.isAZChecked) {
+                      //   filterProvider.toggleAZ(!filterProvider.isAZChecked);
+                      // }
+                      // filterProvider.toggleZA(value!);
                     });
                   }),
               const Text('Z to A'),
@@ -162,12 +195,18 @@ class _FilterDialogState extends State<FilterDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            if (filterProvider.isAZChecked) {
+            if (isAZ) {
+              filterProvider.toggleAZ(true);
+              filterProvider.toggleZA(false);
               filterProvider.setFilterAZ();
-            } else if (filterProvider.isZAChecked) {
+            } else if (isZA) {
+              filterProvider.toggleAZ(false);
+              filterProvider.toggleZA(true);
               filterProvider.setFilterZA();
             } else {
-              filterProvider.fetchBook();
+              filterProvider.toggleAZ(false);
+              filterProvider.toggleZA(false);
+              filterProvider.resetFilter();
             }
             Navigator.pop(context);
           },

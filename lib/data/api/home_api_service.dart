@@ -3,9 +3,7 @@ import 'package:elibrary/data/model/home_book_model.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-  // static const baseUrl = 'elibrary-a14-tk.pbp.cs.ui.ac.id/';
-  static const baseUrl = '10.0.2.2:8000/';
+  static const baseUrl = '127.0.0.1:8000/';
   static const jsonUrl = 'json/';
   static const searchUrl = 'search/';
   static const filterAZUrl = 'json/a-z/';
@@ -13,7 +11,7 @@ class ApiService {
 
   Future<List<Book>> getBook() async {
     var url = Uri.parse(
-        'https://$baseUrl$jsonUrl');
+        'http://$baseUrl$jsonUrl');
     final response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},

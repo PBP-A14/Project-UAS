@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../auth/auth.dart';
 
 class RegisterPage extends StatefulWidget {
   static const routeName = '/register';
@@ -11,9 +14,14 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _password1Controller = TextEditingController();
+  final TextEditingController _password2Controller = TextEditingController();
+  bool _isObscure1 = false;
+  bool _isObscure2 = false;
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -37,8 +45,8 @@ class _RegisterPageState extends State<RegisterPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
               child: Text(
                 'Sign up',
                 style: TextStyle(
@@ -53,7 +61,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 elevation: 2,
                 borderRadius: BorderRadius.circular(12),
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _usernameController,
+                  decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.person_outline),
                     hintText: 'Username',
                   ),
@@ -66,10 +75,22 @@ class _RegisterPageState extends State<RegisterPage> {
                 elevation: 2,
                 borderRadius: BorderRadius.circular(12),
                 child: TextField(
+                  controller: _password1Controller,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.lock_outline),
+                    prefixIcon: const Icon(Icons.lock_outline),
                     hintText: 'Password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isObscure1 ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isObscure1 = !_isObscure1;
+                        });
+                      },
+                    ),
                   ),
+                  obscureText: _isObscure1,
                 ),
               ),
             ),
@@ -79,10 +100,22 @@ class _RegisterPageState extends State<RegisterPage> {
                 elevation: 2,
                 borderRadius: BorderRadius.circular(12),
                 child: TextField(
+                  controller: _password2Controller,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.lock_outline),
+                    prefixIcon: const Icon(Icons.lock_outline),
                     hintText: 'Re-enter password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isObscure2 ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isObscure2 = !_isObscure2;
+                        });
+                      },
+                    ),
                   ),
+                  obscureText: _isObscure2,
                 ),
               ),
             ),
@@ -100,7 +133,85 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    String username = _usernameController.text;
+                    String password1 = _password1Controller.text;
+                    String password2 = _password2Controller.text;
+
+                    if (username.isNotEmpty ||
+                        password1.isNotEmpty ||
+                        password2.isNotEmpty) {
+                      if (password1 == password2) {
+                        // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+                        final response = await request.register(
+                            "http://10.0.2.2:8000/authentication/mobile-register/",
+                            {
+                              'username': username,
+                              'password': password1,
+                            });
+                        if (request.registered) {
+                          if (mounted) {
+                            String message = response['message'];
+                            // String uname = response['username'];
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                content: Text(message),
+                              ));
+                            Navigator.pop(context);
+                          }
+                        } else {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                const SnackBar(
+                                  backgroundColor: Color(0xFFFFDCE0),
+                                  behavior: SnackBarBehavior.floating,
+                                  content: Text(
+                                    "Username already exist!",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              );
+                          }
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Color(0xFFFFDCE0),
+                              behavior: SnackBarBehavior.floating,
+                              content: Text(
+                                "Password don't match!",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          );
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          const SnackBar(
+                            backgroundColor: Color(0xFFFFDCE0),
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(
+                              "Field can't be empty!",
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        );
+                    }
+                  },
                   child: const Text('Sign up'),
                 ),
               ),
@@ -108,12 +219,12 @@ class _RegisterPageState extends State<RegisterPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Already have account?"),
+                const Text("Already have account?"),
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Sign in'),
+                  child: const Text('Sign in'),
                 ),
               ],
             )

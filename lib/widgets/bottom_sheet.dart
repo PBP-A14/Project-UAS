@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/model/home_book_model.dart';
 
-// TODO: Overflow tp gtw dimana?
-
 class BookBottomSheet extends StatelessWidget {
   final Fields book;
 
