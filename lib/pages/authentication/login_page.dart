@@ -2,8 +2,9 @@ import 'package:elibrary/navigation_menu.dart';
 import 'package:elibrary/pages/authentication/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
+// import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import '../../auth/auth.dart';
 
 class LoginPage extends StatefulWidget {
   static const routeName = '/login';
@@ -17,6 +18,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -83,11 +85,21 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(12),
                   child: TextField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.lock_outline),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.lock_outline),
                       hintText: 'Password',
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isObscure ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isObscure = !_isObscure;
+                          });
+                        },
+                      ),
                     ),
-                    obscureText: true,
+                    obscureText: _isObscure,
                   ),
                 ),
               ),
@@ -135,6 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         } else {
                           if (mounted) {
+                            _passwordController.clear();
                             ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()
                               ..showSnackBar(

@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 import '../../utils/enum_resultstate.dart';
 import '../../widgets/book_card.dart';
 
-//TODO: Kalo pop reset data
-
 class SearchPage extends StatefulWidget {
   static const routeName = '/search';
 
