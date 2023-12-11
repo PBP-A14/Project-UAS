@@ -1,5 +1,6 @@
 import 'package:elibrary/common/appbar_theme.dart';
 import 'package:elibrary/common/inputdecoration_theme.dart';
+import 'package:elibrary/data/api/progress_api_service.dart';
 import 'package:elibrary/navigation_menu.dart';
 import 'package:elibrary/pages/authentication/login_page.dart';
 import 'package:elibrary/pages/authentication/register_page.dart';
@@ -7,6 +8,7 @@ import 'package:elibrary/pages/home/book_list_page.dart';
 import 'package:elibrary/pages/home/home_page.dart';
 import 'package:elibrary/pages/home/search_page.dart';
 import 'package:elibrary/provider/home_provider.dart';
+import 'package:elibrary/provider/progress_provider.dart';
 import 'package:elibrary/provider/search_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,6 +31,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => SearchProvider(apiService: ApiService()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ProgressProvider(apiService: ProgressApiService())
         ),
         Provider(
           create: (_) {
