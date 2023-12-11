@@ -1,3 +1,4 @@
+import 'package:elibrary/pages/detail_buku_page.dart';
 import 'package:flutter/material.dart';
 import '../data/model/home_book_model.dart';
 
@@ -84,7 +85,12 @@ class BookBottomSheet extends StatelessWidget {
             child: SizedBox(
               width: double.maxFinite,
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DetailBukuPage(book: book)),
+                  );
+                },
                 icon: const Icon(Icons.info_outline_rounded),
                 label: const Text('Detail'),
                 style: ButtonStyle(
