@@ -6,10 +6,34 @@ import 'package:provider/provider.dart';
 import '../../utils/enum_resultstate.dart';
 import '../../widgets/filter_button.dart';
 
-class BookListPage extends StatelessWidget {
+class BookListPage extends StatefulWidget {
   static const routeName = '/book-list';
 
   const BookListPage({super.key});
+
+  @override
+  State<BookListPage> createState() => _BookListPageState();
+}
+
+class _BookListPageState extends State<BookListPage> {
+  final ScrollController _scrollController = ScrollController();
+  bool _showButton = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels > 200) {
+        setState(() {
+          _showButton = true;
+        });
+      } else {
+        setState(() {
+          _showButton = false;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +62,7 @@ class BookListPage extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -62,7 +86,8 @@ class BookListPage extends StatelessWidget {
                             ),
                             readOnly: true,
                             onTap: () {
-                              Navigator.pushNamed(context, SearchPage.routeName);
+                              Navigator.pushNamed(
+                                  context, SearchPage.routeName);
                             },
                           ),
                         ),
@@ -95,7 +120,7 @@ class BookListPage extends StatelessWidget {
               ),
               const Padding(
                 padding: EdgeInsets.only(left: 12),
-                child: FilterButton(),
+                child: SizedBox(child: FilterButton()),
               ),
               const Padding(
                 padding: EdgeInsets.all(12.0),
@@ -163,16 +188,40 @@ class BookListPage extends StatelessWidget {
                         ),
                       );
                     } else {
-                      return GridView.count(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1 / 1.2,
-                        shrinkWrap: true,
-                        children: List.generate(data.result.length, (index) {
-                          var book = data.result[index];
-                          return BookCard(
-                            book: book,
-                          );
-                        }),
+                      return Stack(
+                        children: <Widget>[
+                          GridView.count(
+                            controller: _scrollController,
+                            crossAxisCount: 2,
+                            childAspectRatio: 1 / 1.2,
+                            shrinkWrap: true,
+                            children:
+                                List.generate(data.result.length, (index) {
+                              var book = data.result[index].fields;
+                              return BookCard(
+                                book: book,
+                              );
+                            }),
+                          ),
+                          if (_showButton)
+                            Positioned(
+                              bottom: 10.0,
+                              right: 10.0,
+                              child: FloatingActionButton(
+                                backgroundColor: Colors.black,
+                                foregroundColor: Colors.white,
+                                child: const Icon(
+                                  Icons.arrow_upward),
+                                onPressed: () {
+                                  _scrollController.animateTo(
+                                    0,
+                                    duration: const Duration(seconds: 1),
+                                    curve: Curves.easeIn,
+                                  );
+                                },
+                              ),
+                            ),
+                        ],
                       );
                     }
                   },
