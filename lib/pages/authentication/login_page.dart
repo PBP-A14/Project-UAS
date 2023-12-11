@@ -1,4 +1,5 @@
 import 'package:elibrary/navigation_menu.dart';
+import 'package:elibrary/pages/authentication/login_user.dart';
 import 'package:elibrary/pages/authentication/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -127,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                       if (username.isNotEmpty || password.isNotEmpty) {
                         // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                         final response = await request.login(
-                            "http://10.0.2.2:8000/authentication/mobile-login/",
+                            "http://127.0.0.1:8000/authentication/mobile-login/",
                             {
                               'username': username,
                               'password': password,
@@ -136,6 +137,11 @@ class _LoginPageState extends State<LoginPage> {
                         if (request.loggedIn) {
                           String message = response['message'];
                           String uname = response['username'];
+                          int userId = response['user_id'];
+                          CurrUserData.user_id = userId;
+                          CurrUserData.username = username;
+                          // print(CurrUserData.user_id);
+                          // print(CurrUserData.username);
                           if (mounted) {
                             Navigator.pushReplacementNamed(
                                 context, NavigationMenu.routeName);
