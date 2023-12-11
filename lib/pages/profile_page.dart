@@ -4,7 +4,8 @@ import 'package:elibrary/widgets/book_tile.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:pbp_django_auth/pbp_django_auth.dart';
+// import 'package:pbp_django_auth/pbp_django_auth.dart';
+import '../../auth/auth.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer';
 

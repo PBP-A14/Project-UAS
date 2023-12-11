@@ -9,6 +9,8 @@ class BookTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print(book.fields.rating);
+    // ;
     String newRating;
     String newTitle;
     String newAuthor;
