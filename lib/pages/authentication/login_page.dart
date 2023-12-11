@@ -127,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                       if (username.isNotEmpty || password.isNotEmpty) {
                         // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                         final response = await request.login(
-                            "http://10.0.2.2:8000/authentication/mobile-login/",
+                            "http://127.0.0.1:8000/authentication/mobile-login/",
                             {
                               'username': username,
                               'password': password,
