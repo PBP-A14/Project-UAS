@@ -13,8 +13,9 @@ import 'package:elibrary/provider/search_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
+// import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'auth/auth.dart';
 import 'data/api/home_api_service.dart';
 
 void main() => runApp(const MyApp());
