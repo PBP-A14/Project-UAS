@@ -168,7 +168,7 @@ class BookListPage extends StatelessWidget {
                         childAspectRatio: 1 / 1.2,
                         shrinkWrap: true,
                         children: List.generate(data.result.length, (index) {
-                          var book = data.result[index].fields;
+                          var book = data.result[index];
                           return BookCard(
                             book: book,
                           );
