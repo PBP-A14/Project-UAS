@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:elibrary/data/model/user.dart';
 import 'package:elibrary/pages/admin_app/add_book_form.dart';
+import '../../auth/auth.dart';
+import 'package:provider/provider.dart';
 
 class AdminAppPage extends StatefulWidget {
   const AdminAppPage({Key? key}) : super(key: key);
@@ -33,8 +35,56 @@ class _AdminAppPageState extends State<AdminAppPage> {
     return list_user;
   }
 
+  void _deleteUser(int id, CookieRequest cookieRequest) async {
+    try {
+      final response = await cookieRequest
+          .post('http://127.0.0.1:8000/admin_app/delete_user/$id/', {});
+      if (response['status'] == 'success') {
+        setState(() {});
+      }
+    } catch (e) {
+      throw Exception('Error : $e');
+    }
+  }
+
+  void _showDeleteConfirmationDialog(String username, int id, CookieRequest cookieRequest) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete User'),
+          content: Text('Are you sure you want to delete $username?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                _deleteUser(id, cookieRequest);
+                Navigator.of(context).pop(); // Close the dialog
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(
+                  content: Text("User has been deleted"),
+                ));
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
     return Scaffold(
         appBar: AppBar(
           title: Row(
@@ -109,7 +159,7 @@ class _AdminAppPageState extends State<AdminAppPage> {
                                     child: Column(children: [
                                       Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: <Widget>[
                                           snapshot.data![index].fields.isStaff
                                               ? const Icon(
@@ -161,6 +211,19 @@ class _AdminAppPageState extends State<AdminAppPage> {
                                                 ),
                                               ],
                                             ),
+                                          ),
+                                          Text(
+                                            "Delete",
+                                            style: const TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.delete),
+                                            onPressed: () {
+                                              _showDeleteConfirmationDialog(snapshot.data![index].fields.username, snapshot.data![index].pk, request);
+                                            },
                                           ),
                                         ],
                                       ),
