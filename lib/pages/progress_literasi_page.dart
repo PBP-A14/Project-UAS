@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:elibrary/data/model/home_book_model.dart';
-import 'package:elibrary/provider/progress_provider.dart';
+// import 'package:elibrary/data/model/home_book_model.dart';
+// import 'package:elibrary/provider/progress_provider.dart';
+import 'package:elibrary/data/model/target_harian_model.dart';
 import 'package:flutter/material.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
+// import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:elibrary/auth/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:http/http.dart' as http;
+
+// import 'package:http/http.dart' as http;
 
 class ProgressLiterasiPage extends StatelessWidget {
   const ProgressLiterasiPage({Key? key}) : super(key: key);
@@ -72,6 +75,27 @@ class _TargetBukuFormState extends State<TargetBukuForm> {
   final TextEditingController _targetBukuController = TextEditingController();
   bool _showTarget = false;
 
+  Future<List<TargetHarian>> fetchTarget() async {
+    // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+    var url = Uri.parse('http://<URL_APP_KAMU>/json/');
+    var response = await http.get(
+      url,
+      headers: {"Content-Type": "application/json"},
+    );
+
+    // melakukan decode response menjadi bentuk json
+    var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+    // melakukan konversi data json menjadi object Product
+    List<TargetHarian> target_buku = [];
+    for (var d in data) {
+      if (d != null) {
+        target_buku.add(TargetHarian.fromJson(d));
+      }
+    }
+    return target_buku;
+  }
+
   Future<void> _submitForm(BuildContext context) async {
     Map<String, dynamic> data = {
       'target_buku': _targetBukuController.text,
@@ -102,38 +126,57 @@ class _TargetBukuFormState extends State<TargetBukuForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _showTarget
-              ? Text(
-                  'Target Harian Anda: ${_targetBukuController.text}',
-                  style: TextStyle(fontSize: 18),
-                )
-              : Container(),
-          SizedBox(height: 8),
-          TextFormField(
-            controller: _targetBukuController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: 'Masukkan Target Buku Harian',
-            ),
-          ),
-          SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              _submitForm(context);
-            },
-            child: Text('Set Target'),
-          ),
-        ],
-      ),
-    );
+    return FutureBuilder(
+        future: fetchTarget(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.data == null) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            if (!snapshot.hasData) {
+              return const Column(
+                children: [
+                  Text(
+                    "Tidak ada data target.",
+                    style: TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+                  ),
+                  SizedBox(height: 8),
+                ],
+              );
+            } else {
+              return Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _showTarget
+                        ? Text(
+                            'Target Harian Anda: ${_targetBukuController.text}',
+                            style: TextStyle(fontSize: 18),
+                          )
+                        : Container(),
+                    SizedBox(height: 8),
+                    TextFormField(
+                      controller: _targetBukuController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Masukkan Target Buku Harian',
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        _submitForm(context);
+                      },
+                      child: Text('Set Target'),
+                    ),
+                  ],
+                ),
+              );
+            }
+          }
+        });
   }
 }
-
 
 class WaktuAktifWidget extends StatefulWidget {
   @override
