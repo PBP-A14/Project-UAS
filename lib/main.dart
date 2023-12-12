@@ -7,7 +7,6 @@ import 'package:elibrary/pages/authentication/register_page.dart';
 import 'package:elibrary/pages/home/book_list_page.dart';
 import 'package:elibrary/pages/home/home_page.dart';
 import 'package:elibrary/pages/home/search_page.dart';
-import 'package:elibrary/pages/progress_literasi_page.dart';
 import 'package:elibrary/provider/home_provider.dart';
 import 'package:elibrary/provider/progress_provider.dart';
 import 'package:elibrary/provider/search_provider.dart';

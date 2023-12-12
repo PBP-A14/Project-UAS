@@ -1,11 +1,13 @@
 import 'package:elibrary/data/model/home_book_model.dart';
+import 'package:elibrary/pages/authentication/login_user.dart';
 import 'package:elibrary/widgets/book_tile.dart';
 import 'package:flutter/material.dart';
-// import 'dart:convert';
-// import 'package:http/http.dart' as http;
-import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+// import 'package:pbp_django_auth/pbp_django_auth.dart';
+import '../../auth/auth.dart';
 import 'package:provider/provider.dart';
-// import 'dart:developer';
+import 'dart:developer';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -19,9 +21,9 @@ class _ProfilePageState extends State<ProfilePage> {
     final request = context.watch<CookieRequest>();
     var url = 'http://127.0.0.1:8000/my_profile/get_reading_history_json/';
     var response = await request.get(url);
-    print(response);
+    // print(response);
     var data = [...response];
-    print(data.runtimeType);
+    // print(data.runtimeType);
 
     List<Book> list_product = [];
     for (var d in data) {
@@ -29,16 +31,16 @@ class _ProfilePageState extends State<ProfilePage> {
         list_product.add(Book.fromJson(d));
       }
     }
-    print(list_product);
+    // print(list_product);
     return list_product;
   }
 
   @override
   Widget build(BuildContext context) {
-    //print("Masuk");
+    String uname = CurrUserData.username!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Profile'),
+        title: Text('Hello, ${uname}'),
       ),
       body: FutureBuilder(
         future: fetchProduct(context),
@@ -59,7 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
             return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (_, index) {
-                  var book = snapshot.data![index].fields;
+                  var book = snapshot.data![index];
                   return BookTile(book: book);
                 });
           }
