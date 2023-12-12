@@ -178,7 +178,7 @@ class HomeBody extends StatelessWidget {
                     shrinkWrap: true,
                     clipBehavior: Clip.none,
                     itemBuilder: (context, index) {
-                      var book = data.randomBook[index].fields;
+                      var book = data.randomBook[index];
                       return BookCard(
                         book: book,
                       );
@@ -223,7 +223,7 @@ class HomeBody extends StatelessWidget {
               shrinkWrap: true,
               itemCount: 4,
               itemBuilder: (context, index) {
-                var book = data.result[index].fields;
+                var book = data.result[index];
                 return BookTile(
                   book: book,
                 );

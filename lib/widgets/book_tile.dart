@@ -3,32 +3,34 @@ import '../data/model/home_book_model.dart';
 import 'bottom_sheet.dart';
 
 class BookTile extends StatelessWidget {
-  final Fields book;
+  final Book book;
 
   const BookTile({super.key, required this.book});
 
   @override
   Widget build(BuildContext context) {
+    // print(book.fields.rating);
+    // ;
     String newRating;
     String newTitle;
     String newAuthor;
 
-    if (book.ratingCount == 0) {
+    if (book.fields.ratingCount == 0) {
       newRating = 'No rating';
     } else {
-      newRating = '${book.rating}';
+      newRating = '${book.fields.rating}';
     }
 
-    if (book.title.length > 50) {
-      newTitle = '${book.title.substring(0, 50)}...';
+    if (book.fields.title.length > 50) {
+      newTitle = '${book.fields.title.substring(0, 50)}...';
     } else {
-      newTitle = book.title;
+      newTitle = book.fields.title;
     }
 
-    if (book.authors.length > 25) {
-      newAuthor = '${book.authors.substring(0, 25)}...';
+    if (book.fields.authors.length > 25) {
+      newAuthor = '${book.fields.authors.substring(0, 25)}...';
     } else {
-      newAuthor = book.authors;
+      newAuthor = book.fields.authors;
     }
 
     return InkWell(
@@ -70,7 +72,7 @@ class BookTile extends StatelessWidget {
                     height: 100,
                     width: 100 / 1.4,
                     child: Image.network(
-                      'https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg',
+                      'https://covers.openlibrary.org/b/isbn/${book.fields.isbn}-M.jpg',
                       fit: BoxFit.fitWidth,
                       errorBuilder: (context, _, __) {
                         return const Center(child: Text('No Image'));

@@ -1,4 +1,5 @@
 import 'package:elibrary/navigation_menu.dart';
+import 'package:elibrary/pages/authentication/login_user.dart';
 import 'package:elibrary/pages/authentication/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -136,6 +137,11 @@ class _LoginPageState extends State<LoginPage> {
                         if (request.loggedIn) {
                           String message = response['message'];
                           String uname = response['username'];
+                          int userId = response['user_id'];
+                          CurrUserData.user_id = userId;
+                          CurrUserData.username = username;
+                          // print(CurrUserData.user_id);
+                          // print(CurrUserData.username);
                           if (mounted) {
                             Navigator.pushReplacementNamed(
                                 context, NavigationMenu.routeName);

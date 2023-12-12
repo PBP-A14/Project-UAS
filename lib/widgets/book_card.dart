@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/model/home_book_model.dart';
 
 class BookCard extends StatelessWidget {
-  final Fields book;
+  final Book book;
 
   const BookCard({super.key, required this.book});
 
@@ -12,16 +12,16 @@ class BookCard extends StatelessWidget {
     String newTitle;
     String newAuthor;
 
-    if (book.title.length > 20) {
-      newTitle = '${book.title.substring(0, 20)}...';
+    if (book.fields.title.length > 20) {
+      newTitle = '${book.fields.title.substring(0, 20)}...';
     } else {
-      newTitle = book.title;
+      newTitle = book.fields.title;
     }
 
-    if (book.authors.length > 20) {
-      newAuthor = '${book.authors.substring(0, 20)}...';
+    if (book.fields.authors.length > 20) {
+      newAuthor = '${book.fields.authors.substring(0, 20)}...';
     } else {
-      newAuthor = book.authors;
+      newAuthor = book.fields.authors;
     }
 
     return InkWell(
@@ -57,7 +57,7 @@ class BookCard extends StatelessWidget {
                     width: 125,
                     color: Colors.grey,
                     child: Image.network(
-                      'https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg',
+                      'https://covers.openlibrary.org/b/isbn/${book.fields.isbn}-L.jpg',
                       fit: BoxFit.fitWidth,
                       errorBuilder: (context, _, __) {
                         return const Center(child: Text('No Image'));
