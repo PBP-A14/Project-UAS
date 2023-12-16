@@ -30,7 +30,7 @@ class Book {
 
 class Fields {
   String title;
-  Description description;
+  String description;
   String authors;
   String isbn;
   int numPages;
@@ -51,7 +51,7 @@ class Fields {
 
   factory Fields.fromJson(Map<String, dynamic> json) => Fields(
     title: json["title"],
-    description: descriptionValues.map[json["description"]]!,
+    description: json["description"],
     authors: json["authors"],
     isbn: json["isbn"],
     numPages: json["num_pages"],
@@ -62,7 +62,7 @@ class Fields {
 
   Map<String, dynamic> toJson() => {
     "title": title,
-    "description": descriptionValues.reverse[description],
+    "description": description,
     "authors": authors,
     "isbn": isbn,
     "num_pages": numPages,
@@ -71,14 +71,6 @@ class Fields {
     "rating": rating,
   };
 }
-
-enum Description {
-  EMPTY
-}
-
-final descriptionValues = EnumValues({
-  "-": Description.EMPTY
-});
 
 enum Model {
   HOME_BOOK
