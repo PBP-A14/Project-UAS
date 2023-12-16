@@ -35,7 +35,7 @@ class _AdminAppPageState extends State<AdminAppPage> {
     return list_user;
   }
 
-  void _deleteUser(int id, CookieRequest cookieRequest) async {
+  void deleteUser(int id, CookieRequest cookieRequest) async {
     try {
       final response = await cookieRequest
           .post('http://127.0.0.1:8000/admin_app/delete_user/$id/', {});
@@ -47,33 +47,29 @@ class _AdminAppPageState extends State<AdminAppPage> {
     }
   }
 
-  void _showDeleteConfirmationDialog(String username, int id, CookieRequest cookieRequest) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-
+  void confirmDelete(String username, int id, CookieRequest cookieRequest) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete User'),
+          title: const Text('Delete User'),
           content: Text('Are you sure you want to delete $username?'),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () async {
-                _deleteUser(id, cookieRequest);
-                Navigator.of(context).pop(); // Close the dialog
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(const SnackBar(
+                deleteUser(id, cookieRequest);
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("User has been deleted"),
                 ));
               },
-              child: Text('Delete'),
+              child: const Text('Delete'),
             ),
           ],
         );
@@ -212,17 +208,22 @@ class _AdminAppPageState extends State<AdminAppPage> {
                                               ],
                                             ),
                                           ),
-                                          Text(
+                                          const Text(
                                             "Delete",
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 18.0,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           IconButton(
-                                            icon: Icon(Icons.delete),
+                                            icon: const Icon(Icons.delete,
+                                                color: Colors.red),
                                             onPressed: () {
-                                              _showDeleteConfirmationDialog(snapshot.data![index].fields.username, snapshot.data![index].pk, request);
+                                              confirmDelete(
+                                                  snapshot.data![index].fields
+                                                      .username,
+                                                  snapshot.data![index].pk,
+                                                  request);
                                             },
                                           ),
                                         ],
