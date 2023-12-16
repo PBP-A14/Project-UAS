@@ -79,7 +79,7 @@ class _TargetFormPage extends State<TargetFormPage> {
                               "http://127.0.0.1:8000/progress_literasi/set_target_flutter/",
                               jsonEncode(<String, String>{
                                   'Target Buku': _target.toString(),
-                              }), int: null);
+                              }));
                               
                               print(response);
                               if (response['status'] == 'success') {

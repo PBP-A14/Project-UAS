@@ -165,7 +165,6 @@ class _TargetBukuWidgetState extends State<TargetBukuWidget> {
           jsonEncode(<String, String>{
             'Target Buku': _target.toString(),
           }),
-          int: null // Add an empty map as the request body
           );
 
       if (response['success']) {
