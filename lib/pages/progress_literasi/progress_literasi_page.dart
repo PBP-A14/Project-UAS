@@ -2,14 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:elibrary/data/model/home_book_model.dart';
-// import 'package:elibrary/data/model/target_harian_model.dart';
 import 'package:elibrary/pages/progress_literasi/target_form.dart';
 import 'package:elibrary/widgets/book_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:elibrary/auth/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:http/http.dart' as http;
 
 int _target = 0;
 
