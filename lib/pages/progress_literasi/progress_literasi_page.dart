@@ -338,50 +338,45 @@ class _ReadingHistoryWidgetState extends State<ReadingHistoryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 300, // Set a fixed height for ReadingHistoryWidget
-      child: FutureBuilder(
-        future: fetchProduct(context),
-        builder: (context, AsyncSnapshot<List<Book>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Text(
-                "Tidak ada riwayat bacaan.",
-                style: TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+    return FutureBuilder(
+      future: fetchProduct(context),
+      builder: (context, AsyncSnapshot<List<Book>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Padding(
+            padding: EdgeInsets.all(12.0),
+            child: Text(
+              "Tidak ada riwayat bacaan.",
+              style: TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+            ),
+          );
+        } else {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(12.0),
+                child: Text(
+                  'Riwayat Buku',
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
-            );
-          } else {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: Text(
-                    'Riwayat Buku',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-                SizedBox(height: 8),
-                Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (_, index) {
-                      var book = snapshot.data![index];
-                      return BookTile(book: book);
-                    },
-                  ),
-                ),
-              ],
-            );
-          }
-        },
-      ),
+              SizedBox(height: 8),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data!.length,
+                itemBuilder: (_, index) {
+                  var book = snapshot.data![index];
+                  return BookTile(book: book);
+                },
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 }
