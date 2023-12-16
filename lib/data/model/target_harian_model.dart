@@ -1,21 +1,21 @@
 import 'dart:convert';
 
-List<TargetHarian> targetHarianFromJson(String str) => List<TargetHarian>.from(json.decode(str).map((x) => TargetHarian.fromJson(x)));
+List<UserProfile> userProfileFromJson(String str) => List<UserProfile>.from(json.decode(str).map((x) => UserProfile.fromJson(x)));
 
-String targetHarianToJson(List<TargetHarian> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String userProfileToJson(List<UserProfile> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class TargetHarian {
+class UserProfile {
     String model;
     int pk;
     Fields fields;
 
-    TargetHarian({
+    UserProfile({
         required this.model,
         required this.pk,
         required this.fields,
     });
 
-    factory TargetHarian.fromJson(Map<String, dynamic> json) => TargetHarian(
+    factory UserProfile.fromJson(Map<String, dynamic> json) => UserProfile(
         model: json["model"],
         pk: json["pk"],
         fields: Fields.fromJson(json["fields"]),

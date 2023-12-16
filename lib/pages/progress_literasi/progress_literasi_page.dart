@@ -1,21 +1,26 @@
 import 'dart:async';
 import 'dart:convert';
-// import 'package:elibrary/data/model/home_book_model.dart';
-// import 'package:elibrary/provider/progress_provider.dart';
+
 import 'package:elibrary/data/model/home_book_model.dart';
-import 'package:elibrary/data/model/target_harian_model.dart';
+// import 'package:elibrary/data/model/target_harian_model.dart';
+import 'package:elibrary/pages/progress_literasi/target_form.dart';
 import 'package:elibrary/widgets/book_tile.dart';
 import 'package:flutter/material.dart';
-// import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:elibrary/auth/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-
 // import 'package:http/http.dart' as http;
-class ProgressLiterasiPage extends StatelessWidget {
+
+int _target = 0;
+
+class ProgressLiterasiPage extends StatefulWidget {
   const ProgressLiterasiPage({Key? key}) : super(key: key);
 
+  @override
+  _ProgressLiterasiPageState createState() => _ProgressLiterasiPageState();
+}
+
+class _ProgressLiterasiPageState extends State<ProgressLiterasiPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,9 +44,14 @@ class ProgressLiterasiPage extends StatelessWidget {
   }
 }
 
-class ProgressLiterasiBody extends StatelessWidget {
+class ProgressLiterasiBody extends StatefulWidget {
   const ProgressLiterasiBody({Key? key}) : super(key: key);
 
+  @override
+  _ProgressLiterasiBodyState createState() => _ProgressLiterasiBodyState();
+}
+
+class _ProgressLiterasiBodyState extends State<ProgressLiterasiBody> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -58,7 +68,8 @@ class ProgressLiterasiBody extends StatelessWidget {
               ),
             ),
           ),
-          TargetBukuForm(),
+          TextProgressWidget(),
+          TargetBukuWidget(),
           WaktuAktifWidget(),
           ReadingHistoryWidget(),
         ],
@@ -67,170 +78,176 @@ class ProgressLiterasiBody extends StatelessWidget {
   }
 }
 
-class TargetBukuForm extends StatefulWidget {
+class TextProgressWidget extends StatefulWidget {
   @override
-  _TargetBukuFormState createState() => _TargetBukuFormState();
+  _TextProgressWidgetState createState() => _TextProgressWidgetState();
 }
 
-class _TargetBukuFormState extends State<TargetBukuForm> {
-  final TextEditingController _targetBukuController = TextEditingController();
-  bool _showTarget = false;
+class _TextProgressWidgetState extends State<TextProgressWidget> {
+  String textProgress = '';
 
-  Future<List<TargetHarian>> fetchTarget() async {
-    var url = Uri.parse('http://127.0.0.1:8000/progress_literasi/show_json/');
-    var response = await http.get(
-      url,
-      headers: {"Content-Type": "application/json"},
+  Future<void> getTextProgress() async {
+    final request = context.read<CookieRequest>();
+
+    try {
+      final response = await request.get(
+        'http://127.0.0.1:8000/progress_literasi/get_text_mobile/',
+        // Add any necessary headers, like authentication headers, if required
+      );
+
+      if (response is Map<String, dynamic>) {
+        // Check if the response is a JSON map
+        final data = response;
+        setState(() {
+          textProgress = data['text_progress'];
+        });
+      } else {
+        // Handle unexpected response format
+        print('Unexpected response format: $response');
+      }
+    } catch (e) {
+      // Handle exceptions
+      print('Error: $e');
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getTextProgress();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Your bold text here
+        
+        // The text progress fetched from Django
+        Text(
+          '    $textProgress',
+          style: TextStyle(fontWeight: FontWeight.bold)),
+        // Your other widgets...
+      ],
+    );
+  }
+}
+
+class TargetBukuWidget extends StatefulWidget {
+  @override
+  _TargetBukuWidgetState createState() => _TargetBukuWidgetState();
+}
+
+class _TargetBukuWidgetState extends State<TargetBukuWidget> {
+  Future<int> fetchTargetValue(BuildContext context) async {
+    final request = context.watch<CookieRequest>();
+    request.headers = {"Content-Type": "application/json"};
+    var response = await request.get(
+      'http://127.0.0.1:8000/progress_literasi/show_json/',
     );
 
-    var data = jsonDecode(utf8.decode(response.bodyBytes));
-    List<TargetHarian> target_buku = [];
-    for (var d in data) {
-      if (d != null) {
-        target_buku.add(TargetHarian.fromJson(d));
-      }
-    }
-    return target_buku;
-  }
-
-  Future<void> _submitForm(BuildContext context) async {
-    Map<String, dynamic> data = {
-      'target_buku': _targetBukuController.text,
-    };
-
-    try {
-      final cookieRequest = context.watch<CookieRequest>();
-      var response = await cookieRequest.postJson(
-        'http://127.0.0.1:8000/progress_literasi/set_target_flutter/',
-        jsonEncode(data),
-      );
-
-      if (response['status'] == 'success') {
-        print('Target berhasil diatur');
-        setState(() {
-          _showTarget = true;
-        });
-      } else {
-        print('Gagal mengatur target');
-      }
-    } catch (error) {
-      print('Error: $error');
+    if (response.length > 0) {
+      var data = response[0]['fields']['target_buku'];
+      return data;
+    } else {
+      throw Exception('Failed to load target values');
     }
   }
 
-  Future<void> _updateTarget(BuildContext context) async {
-    Map<String, dynamic> data = {
-      'target_buku': _targetBukuController.text,
-      'update_target': '1',
-    };
+  Future<void> resetTarget(BuildContext context) async {
+    final request = Provider.of<CookieRequest>(context, listen: false);
+    request.headers = {"Content-Type": "application/json"};
 
     try {
-      final cookieRequest = context.watch<CookieRequest>();
-      var response = await cookieRequest.postJson(
-        'http://127.0.0.1:8000/progress_literasi/update_target/',
-        jsonEncode(data),
-      );
-
-      if (response['status'] == 'success') {
-        print('Target berhasil diperbarui');
-        setState(() {
-          _showTarget = true;
-        });
-      } else {
-        print('Gagal memperbarui target');
-      }
-    } catch (error) {
-      print('Error: $error');
-    }
-  }
-
-  Future<void> _resetTarget(BuildContext context) async {
-    try {
-      final cookieRequest = context.watch<CookieRequest>();
-      var response = await cookieRequest.postJson(
-        'http://127.0.0.1:8000/progress_literasi/reset_target/',
-        jsonEncode({}),
-      );
+      var response = await request.postJson(
+          'http://127.0.0.1:8000/progress_literasi/reset_mobile/',
+          jsonEncode(<String, String>{
+            'Target Buku': _target.toString(),
+          }),
+          int: null // Add an empty map as the request body
+          );
 
       if (response['success']) {
-        print('Target berhasil direset');
-        setState(() {
-          _showTarget = false;
-          _targetBukuController.text = ''; // Clear the text field
-        });
+        // Handle success, e.g., show a success message
+        print(response['message']);
+
+        // Update the UI with the new target value (0)
+        // You may need to adapt this part based on your UI structure
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Target berhasil direset.'),
+          ),
+        );
+
+        // You can also update the UI in other ways based on the new target value
       } else {
-        print('Gagal mereset target');
+        // Handle failure, e.g., show an error message
+        print(response['message']);
       }
-    } catch (error) {
-      print('Error: $error');
+    } catch (e) {
+      // Handle exceptions, e.g., show an error message
+      print('Error: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: fetchTarget(),
-      builder: (context, AsyncSnapshot snapshot) {
-        if (snapshot.data == null) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          if (!snapshot.hasData) {
-            return const Column(
-              children: [
-                Text(
-                  "Tidak ada data target.",
-                  style: TextStyle(color: Color(0xff59A5D8), fontSize: 20),
-                ),
-                SizedBox(height: 8),
-              ],
-            );
-          } else {
-            return Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FutureBuilder<int>(
+          future: fetchTargetValue(context),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              var targetData = snapshot.data;
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _showTarget
-                      ? Text(
-                          'Target Harian Anda: ${_targetBukuController.text}',
-                          style: TextStyle(fontSize: 18),
+                  Text('    Target Buku Kamu: ${targetData.toString()} buku'),
+                  if (targetData != null && targetData > 0) ...[
+                    Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TargetFormPage()),
+                            );
+                          },
+                          child: Text('Update Target'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            resetTarget(context);
+                          },
+                          child: Text('Reset Target'),
                         )
-                      : Container(),
-                  SizedBox(height: 8),
-                  TextFormField(
-                    controller: _targetBukuController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Masukkan Target Buku Harian',
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      _submitForm(context);
-                    },
-                    child: Text('Set Target'),
-                  ),
-                  SizedBox(height: 8),
-                  ElevatedButton(
-                    onPressed: () {
-                      _updateTarget(context);
-                    },
-                    child: Text('Update Target'),
-                  ),
-                  SizedBox(height: 8),
-                  ElevatedButton(
-                    onPressed: () {
-                      _resetTarget(context);
-                    },
-                    child: Text('Reset Target'),
-                  ),
+                      ],
+                    )
+                  ] else ...[
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TargetFormPage()),
+                        );
+                      },
+                      child: Text('Set Target'),
+                    )
+                  ]
                 ],
-              ),
-            );
-          }
-        }
-      },
+              );
+            }
+          },
+        ),
+      ],
     );
   }
 }
