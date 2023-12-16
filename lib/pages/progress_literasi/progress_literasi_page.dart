@@ -120,12 +120,9 @@ class _TextProgressWidgetState extends State<TextProgressWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Your bold text here
-        
-        // The text progress fetched from Django
-        Text(
-          '    $textProgress',
-          style: TextStyle(fontWeight: FontWeight.bold)),
+        SizedBox(height: 8),
+        Text('    $textProgress',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         // Your other widgets...
       ],
     );
@@ -159,11 +156,11 @@ class _TargetBukuWidgetState extends State<TargetBukuWidget> {
 
     try {
       var response = await request.postJson(
-          'http://127.0.0.1:8000/progress_literasi/reset_mobile/',
-          jsonEncode(<String, String>{
-            'Target Buku': _target.toString(),
-          }),
-          );
+        'http://127.0.0.1:8000/progress_literasi/reset_mobile/',
+        jsonEncode(<String, String>{
+          'Target Buku': _target.toString(),
+        }),
+      );
 
       if (response['success']) {
         // Handle success, e.g., show a success message
@@ -193,6 +190,7 @@ class _TargetBukuWidgetState extends State<TargetBukuWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: 8), // Add SizedBox to create space
         FutureBuilder<int>(
           future: fetchTargetValue(context),
           builder: (context, snapshot) {
@@ -207,6 +205,7 @@ class _TargetBukuWidgetState extends State<TargetBukuWidget> {
                 children: [
                   Text('    Target Buku Kamu: ${targetData.toString()} buku'),
                   if (targetData != null && targetData > 0) ...[
+                    SizedBox(height: 10), 
                     Row(
                       children: [
                         ElevatedButton(
@@ -219,6 +218,7 @@ class _TargetBukuWidgetState extends State<TargetBukuWidget> {
                           },
                           child: Text('Update Target'),
                         ),
+                        SizedBox(width: 8), 
                         ElevatedButton(
                           onPressed: () {
                             resetTarget(context);
@@ -228,6 +228,7 @@ class _TargetBukuWidgetState extends State<TargetBukuWidget> {
                       ],
                     )
                   ] else ...[
+                    SizedBox(height: 8), 
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
