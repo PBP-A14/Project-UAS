@@ -1,6 +1,7 @@
 import 'package:elibrary/data/model/home_book_model.dart';
 import 'package:elibrary/pages/authentication/login_user.dart';
 import 'package:elibrary/widgets/book_tile.dart';
+import 'package:elibrary/widgets/password_form.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -50,20 +51,46 @@ class _ProfilePageState extends State<ProfilePage> {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          } else if (!snapshot.hasData ||
+              snapshot.data!.isEmpty ||
+              snapshot.data == null) {
             return Center(
-              child: Text(
-                "Tidak ada data produk.",
-                style: TextStyle(color: Color(0xff59A5D8), fontSize: 20),
-              ),
-            );
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Tidak ada data produk.",
+                  style: TextStyle(color: Colors.grey, fontSize: 20),
+                ),
+                ElevatedButton(
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PasswordFormPage())),
+                    child: Text('Change Password'))
+              ],
+            ));
           } else {
-            return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (_, index) {
-                  var book = snapshot.data![index];
-                  return BookTile(book: book);
-                });
+            return Column(
+              children: [
+                Text(
+                  'Your Reading History',
+                  style: TextStyle(color: Colors.grey, fontSize: 20),
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) =>
+                      BookTile(book: snapshot.data![index]),
+                ),
+                ElevatedButton(
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PasswordFormPage())),
+                    child: Text('Change Password'))
+              ],
+            );
           }
         },
       ),

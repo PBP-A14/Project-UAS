@@ -197,7 +197,7 @@ class _BookListPageState extends State<BookListPage> {
                             shrinkWrap: true,
                             children:
                                 List.generate(data.result.length, (index) {
-                              var book = data.result[index].fields;
+                              var book = data.result[index];
                               return BookCard(
                                 book: book,
                               );
