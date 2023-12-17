@@ -1,12 +1,14 @@
 import 'package:elibrary/data/model/home_book_model.dart';
 import 'package:elibrary/pages/authentication/login_user.dart';
+import 'package:elibrary/pages/profile/profile_detail_page.dart';
+import 'package:elibrary/pages/progress_literasi/progress_literasi_page.dart';
 import 'package:elibrary/widgets/book_tile.dart';
 import 'package:elibrary/widgets/password_form.dart';
 import 'package:flutter/material.dart';
 // import 'dart:convert';
 // import 'package:http/http.dart' as http;
 // import 'package:pbp_django_auth/pbp_django_auth.dart';
-import '../../auth/auth.dart';
+import '../../../auth/auth.dart';
 import 'package:provider/provider.dart';
 // import 'dart:developer';
 
@@ -62,12 +64,18 @@ class _ProfilePageState extends State<ProfilePage> {
                   "Tidak ada data produk.",
                   style: TextStyle(color: Colors.grey, fontSize: 20),
                 ),
+                // ElevatedButton(
+                //     onPressed: () => Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => const PasswordFormPage())),
+                //     child: Text('Change Password')),
                 ElevatedButton(
                     onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const PasswordFormPage())),
-                    child: Text('Change Password'))
+                            builder: (context) => const ProfileDetail())),
+                    child: Text('View Details')),
               ],
             ));
           } else {
@@ -75,20 +83,25 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Text(
                   'Your Reading History',
-                  style: TextStyle(color: Colors.grey, fontSize: 20),
+                  style: TextStyle(color: Colors.black26, fontSize: 20),
                 ),
                 ListView.builder(
                   shrinkWrap: true,
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) =>
                       BookTile(book: snapshot.data![index]),
-                ),
-                ElevatedButton(
+                ),  ElevatedButton(
                     onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const PasswordFormPage())),
-                    child: Text('Change Password'))
+                    child: Text('Change Password')),
+                ElevatedButton(
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ProfileDetail())),
+                    child: Text('View Details')),
               ],
             );
           }

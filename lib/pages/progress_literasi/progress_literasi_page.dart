@@ -200,7 +200,7 @@ class _TargetBukuWidgetState extends State<TargetBukuWidget> {
               return Text('Error: ${snapshot.error}');
             } else {
               var targetData = snapshot.data;
-              return Column(
+              return Column( mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('    Target Buku Kamu: ${targetData.toString()} buku'),
