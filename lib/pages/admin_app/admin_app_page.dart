@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:elibrary/data/model/user.dart';
+import 'package:elibrary/pages/admin_app/add_book_form.dart';
+import '../../auth/auth.dart';
+import 'package:provider/provider.dart';
 
 class AdminAppPage extends StatefulWidget {
   const AdminAppPage({Key? key}) : super(key: key);
@@ -13,8 +16,7 @@ class AdminAppPage extends StatefulWidget {
 class _AdminAppPageState extends State<AdminAppPage> {
   Future<List<User>> fetchUser() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-    var url = Uri.parse(
-        'http://127.0.0.1:8000/admin_app/user_json/');
+    var url = Uri.parse('http://127.0.0.1:8000/admin_app/user_json/');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -33,9 +35,52 @@ class _AdminAppPageState extends State<AdminAppPage> {
     return list_user;
   }
 
+  void deleteUser(int id, CookieRequest cookieRequest) async {
+    try {
+      final response = await cookieRequest
+          .post('http://127.0.0.1:8000/admin_app/delete_user/$id/', {});
+      if (response['status'] == 'success') {
+        setState(() {});
+      }
+    } catch (e) {
+      throw Exception('Error : $e');
+    }
+  }
+
+  void confirmDelete(String username, int id, CookieRequest cookieRequest) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete User'),
+          content: Text('Are you sure you want to delete $username?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                deleteUser(id, cookieRequest);
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("User has been deleted"),
+                ));
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
     return Scaffold(
         appBar: AppBar(
           title: Row(
@@ -51,29 +96,32 @@ class _AdminAppPageState extends State<AdminAppPage> {
             ],
           ),
         ),
-        body: Column(
-          children: [
-            Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      // Respond to button press
-                    },
-                    icon: Icon(Icons.add, size: 18),
-                    label: Text("Add Book"),
+        body: Column(children: [
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(width: 100),
+                const Text(
+                  'Users & Admins',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 22,
                   ),
-                  Container(height: 10),
-                  Text(
-                    'Users',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 22,
-                    ),
-                  ),
-                ]
-            ),
-            Expanded(
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AddBookFormPage(),
+                        ));
+                  },
+                  icon: const Icon(Icons.add, size: 18),
+                  label: const Text("Add Book"),
+                ),
+              ]),
+          const Divider(),
+          Expanded(
               child: FutureBuilder(
                   future: fetchUser(),
                   builder: (context, AsyncSnapshot snapshot) {
@@ -85,8 +133,8 @@ class _AdminAppPageState extends State<AdminAppPage> {
                           children: [
                             Text(
                               "Tidak ada data User.",
-                              style:
-                              TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+                              style: TextStyle(
+                                  color: Color(0xff59A5D8), fontSize: 20),
                             ),
                             SizedBox(height: 8),
                           ],
@@ -95,77 +143,99 @@ class _AdminAppPageState extends State<AdminAppPage> {
                         return ListView.builder(
                           itemCount: snapshot.data!.length,
                           itemBuilder: (_, index) => Card(
-                            // Define the shape of the card
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            // Define how the card's content should be clipped
                             clipBehavior: Clip.antiAliasWithSaveLayer,
-                            // Define the child widget of the card
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                // Add padding around the row widget
                                 Padding(
                                     padding: const EdgeInsets.all(15),
-                                    child: Column(
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              snapshot.data![index].fields.isStaff  ?
-                                              Icon(Icons.star_border_outlined, size: 100) : Icon(Icons.account_circle_outlined, size: 100),
-                                              Container(width: 20),
-                                              // Add an expanded widget to take up the remaining horizontal space
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    // Add some spacing between the top of the card and the title
-                                                    Container(height: 5),
-                                                    // Add a title widget
-                                                    Text(
-                                                      "${snapshot.data![index].fields.username}",
-                                                      style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                                                    ),
-                                                    Container(height: 10),
-                                                    Text(
-                                                      snapshot.data![index].fields.isStaff  ?
-                                                      "Role: Admin" : "Role: User",
-                                                      style: TextStyle(color: Colors.black.withOpacity(0.8)),
-                                                    ),
-                                                    // Add some spacing between the subtitle and the text
-                                                    Container(height: 10),
-                                                    // Add a text widget to display some text
-                                                    Text(
-                                                      "Date Joined: ${snapshot.data![index].fields.dateJoined.toString().substring(0,10)}",
-                                                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                                                    ),
-                                                    Container(height: 10),
-                                                    // Add a text widget to display some text
-                                                    Text(
-                                                      snapshot.data![index].fields.lastLogin == null ?
-                                                      "Last Login: Never"
-                                                          :
-                                                      "Last Login: ${snapshot.data![index].fields.lastLogin.toString().substring(0,10)}",
-                                                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                                                    ),
-                                                  ],
+                                    child: Column(children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          snapshot.data![index].fields.isStaff
+                                              ? const Icon(
+                                                  Icons.star_border_outlined,
+                                                  size: 100)
+                                              : const Icon(
+                                                  Icons.account_circle_outlined,
+                                                  size: 100),
+                                          Container(width: 20),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Container(height: 5),
+                                                Text(
+                                                  "${snapshot.data![index].fields.username}",
+                                                  style: TextStyle(
+                                                      color: Colors.black
+                                                          .withOpacity(1.0)),
                                                 ),
-                                              ),
-                                            ],
+                                                Container(height: 10),
+                                                Text(
+                                                  snapshot.data![index].fields
+                                                          .isStaff
+                                                      ? "Role: Admin"
+                                                      : "Role: User",
+                                                  style: TextStyle(
+                                                      color: Colors.black
+                                                          .withOpacity(0.8)),
+                                                ),
+                                                Container(height: 10),
+                                                Text(
+                                                  "Date Joined: ${snapshot.data![index].fields.dateJoined.toString().substring(0, 10)}",
+                                                  style: TextStyle(
+                                                      color: Colors.black
+                                                          .withOpacity(0.6)),
+                                                ),
+                                                Container(height: 10),
+                                                Text(
+                                                  snapshot.data![index].fields
+                                                              .lastLogin ==
+                                                          null
+                                                      ? "Last Login: Never"
+                                                      : "Last Login: ${snapshot.data![index].fields.lastLogin.toString().substring(0, 10)}",
+                                                  style: TextStyle(
+                                                      color: Colors.black
+                                                          .withOpacity(0.6)),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ]
-                                    )
-                                ),
+                                          const Text(
+                                            "Delete",
+                                            style: TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.delete,
+                                                color: Colors.red),
+                                            onPressed: () {
+                                              confirmDelete(
+                                                  snapshot.data![index].fields
+                                                      .username,
+                                                  snapshot.data![index].pk,
+                                                  request);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ])),
                               ],
                             ),
-                          ),);
+                          ),
+                        );
                       }
                     }
-                  })
-            )
-          ]
-        ));
+                  }))
+        ]));
   }
 }

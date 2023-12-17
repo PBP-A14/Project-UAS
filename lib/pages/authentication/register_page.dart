@@ -144,7 +144,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       if (password1 == password2) {
                         // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                         final response = await request.register(
-                            "http://10.0.2.2:8000/authentication/mobile-register/",
+                            "http://127.0.0.1:8000/authentication/mobile-register/",
                             {
                               'username': username,
                               'password': password1,
