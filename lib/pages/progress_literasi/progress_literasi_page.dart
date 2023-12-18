@@ -66,10 +66,10 @@ class _ProgressLiterasiBodyState extends State<ProgressLiterasiBody> {
               ),
             ),
           ),
-          TextProgressWidget(),
+          TextProgressWidget(), //aman
           TargetBukuWidget(),
-          WaktuAktifWidget(),
-          ReadingHistoryWidget(),
+          WaktuAktifWidget(), //aman
+          ReadingHistoryWidget(), //aman
         ],
       ),
     );
@@ -137,7 +137,6 @@ class TargetBukuWidget extends StatefulWidget {
 class _TargetBukuWidgetState extends State<TargetBukuWidget> {
   Future<int> fetchTargetValue(BuildContext context) async {
     final request = context.watch<CookieRequest>();
-    request.headers = {"Content-Type": "application/json"};
     var response = await request.get(
       'http://127.0.0.1:8000/progress_literasi/show_json/',
     );
@@ -146,20 +145,19 @@ class _TargetBukuWidgetState extends State<TargetBukuWidget> {
       var data = response[0]['fields']['target_buku'];
       return data;
     } else {
+      print('line 149');
       throw Exception('Failed to load target values');
     }
   }
 
   Future<void> resetTarget(BuildContext context) async {
     final request = Provider.of<CookieRequest>(context, listen: false);
-    request.headers = {"Content-Type": "application/json"};
-
     try {
-      var response = await request.postJson(
+      var response = await request.post(
         'http://127.0.0.1:8000/progress_literasi/reset_mobile/',
-        jsonEncode(<String, String>{
+        {
           'Target Buku': _target.toString(),
-        }),
+        },
       );
 
       if (response['success']) {
@@ -200,12 +198,13 @@ class _TargetBukuWidgetState extends State<TargetBukuWidget> {
               return Text('Error: ${snapshot.error}');
             } else {
               var targetData = snapshot.data;
-              return Column( mainAxisAlignment: MainAxisAlignment.center,
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('    Target Buku Kamu: ${targetData.toString()} buku'),
                   if (targetData != null && targetData > 0) ...[
-                    SizedBox(height: 10), 
+                    SizedBox(height: 10),
                     Row(
                       children: [
                         ElevatedButton(
@@ -218,7 +217,7 @@ class _TargetBukuWidgetState extends State<TargetBukuWidget> {
                           },
                           child: Text('Update Target'),
                         ),
-                        SizedBox(width: 8), 
+                        SizedBox(width: 8),
                         ElevatedButton(
                           onPressed: () {
                             resetTarget(context);
@@ -228,7 +227,7 @@ class _TargetBukuWidgetState extends State<TargetBukuWidget> {
                       ],
                     )
                   ] else ...[
-                    SizedBox(height: 8), 
+                    SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
