@@ -1,6 +1,6 @@
 import 'package:elibrary/pages/home/home_page.dart';
 import 'package:elibrary/pages/my_library_page.dart';
-import 'package:elibrary/pages/profile_page.dart';
+import 'package:elibrary/pages/profile/profile_page.dart';
 import 'package:elibrary/pages/progress_literasi/progress_literasi_page.dart';
 import 'package:elibrary/pages/admin_app/admin_app_page.dart';
 import 'package:flutter/material.dart';
