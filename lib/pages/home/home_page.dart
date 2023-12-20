@@ -80,13 +80,14 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-          Consumer<HomeProvider>(
-            builder: (context, data, _) {
-              if (data.state == ResultState.loading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (data.state == ResultState.noData) {
-                return Expanded(
-                  child: Center(
+          const Divider(),
+          Expanded(
+            child: Consumer<HomeProvider>(
+              builder: (context, data, _) {
+                if (data.state == ResultState.loading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (data.state == ResultState.noData) {
+                  return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -98,11 +99,9 @@ class HomePage extends StatelessWidget {
                             textAlign: TextAlign.center),
                       ],
                     ),
-                  ),
-                );
-              } else if (data.state == ResultState.error) {
-                return Expanded(
-                  child: Center(
+                  );
+                } else if (data.state == ResultState.error) {
+                  return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -131,12 +130,12 @@ class HomePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
-                );
-              } else {
-                return HomeBody(data: data);
-              }
-            },
+                  );
+                } else {
+                  return HomeBody(data: data);
+                }
+              },
+            ),
           ),
         ],
       ),
@@ -151,92 +150,90 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Text(
-                'You May Like',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 22,
-                ),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(12.0),
+            child: Text(
+              'You May Like',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 22,
               ),
             ),
-            SizedBox(
-              height: 250,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    const SizedBox(width: 12),
-                    ListView.separated(
-                      physics: const NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: data.randomBook.length,
-                      shrinkWrap: true,
-                      clipBehavior: Clip.none,
-                      itemBuilder: (context, index) {
-                        var book = data.randomBook[index].fields;
-                        return BookCard(
-                          book: book,
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(width: 12);
-                      },
-                    ),
-                    const SizedBox(width: 12),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
+          ),
+          SizedBox(
+            height: 250,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Our Collections',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 22,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        BookListPage.routeName,
+                  const SizedBox(width: 12),
+                  ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: data.randomBook.length,
+                    shrinkWrap: true,
+                    clipBehavior: Clip.none,
+                    itemBuilder: (context, index) {
+                      var book = data.randomBook[index];
+                      return BookCard(
+                        book: book,
                       );
                     },
-                    child: const Text('View all'),
+                    separatorBuilder: (context, index) {
+                      return const SizedBox(width: 12);
+                    },
                   ),
+                  const SizedBox(width: 12),
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: ListView.separated(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  var book = data.result[index].fields;
-                  return BookTile(
-                    book: book,
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return const SizedBox(height: 10);
-                },
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Our Collections',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 22,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      BookListPage.routeName,
+                    );
+                  },
+                  child: const Text('View all'),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: 4,
+              itemBuilder: (context, index) {
+                var book = data.result[index];
+                return BookTile(
+                  book: book,
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(height: 10);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

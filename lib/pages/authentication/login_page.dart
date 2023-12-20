@@ -1,9 +1,11 @@
 import 'package:elibrary/navigation_menu.dart';
+import 'package:elibrary/pages/authentication/login_user.dart';
 import 'package:elibrary/pages/authentication/register_page.dart';
+import 'package:elibrary/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import '../../auth/auth.dart';
 
 class LoginPage extends StatefulWidget {
   static const routeName = '/login';
@@ -17,6 +19,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -83,11 +86,21 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(12),
                   child: TextField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.lock_outline),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.lock_outline),
                       hintText: 'Password',
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isObscure ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isObscure = !_isObscure;
+                          });
+                        },
+                      ),
                     ),
-                    obscureText: true,
+                    obscureText: _isObscure,
                   ),
                 ),
               ),
@@ -112,44 +125,66 @@ class _LoginPageState extends State<LoginPage> {
                       String username = _usernameController.text;
                       String password = _passwordController.text;
 
-                      // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-                      final response = await request.login(
-                          "http://10.0.2.2:8000/authentication/mobile-login/", {
-                        'username': username,
-                        'password': password,
-                      });
+                      if (username.isNotEmpty || password.isNotEmpty) {
+                        final response = await request.login(
+                            "http://${baseUrl}authentication/mobile-login/",
+                            {
+                              'username': username,
+                              'password': password,
+                            });
 
-                      if (request.loggedIn) {
-                        String message = response['message'];
-                        String uname = response['username'];
-                        if (mounted) {
-                          Navigator.pushReplacementNamed(
-                              context, NavigationMenu.routeName);
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                content: Text("$message Welcome, $uname.")));
+                        if (request.loggedIn) {
+                          String message = response['message'];
+                          String uname = response['username'];
+                          int userId = response['user_id'];
+                          bool isAdmin = response['is_admin'];
+                          CurrUserData.userId = userId;
+                          CurrUserData.username = username;
+                          CurrUserData.isAdmin = isAdmin;
+                          // print(isAdmin);
+                          if (mounted) {
+                            Navigator.pushReplacementNamed(
+                                context, NavigationMenu.routeName);
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  content: Text("$message Welcome, $uname.")));
+                          }
+                        } else {
+                          if (mounted) {
+                            _passwordController.clear();
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                const SnackBar(
+                                  backgroundColor: Color(0xFFFFDCE0),
+                                  behavior: SnackBarBehavior.floating,
+                                  content: Text(
+                                    "Incorrect username or password!",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              );
+                          }
                         }
                       } else {
-                        if (mounted) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Login failed'),
-                              content: Text(response['message']),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, NavigationMenu.routeName);
-                                  },
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Color(0xFFFFDCE0),
+                              behavior: SnackBarBehavior.floating,
+                              content: Text(
+                                "Username or password can't be empty!",
+                                style: TextStyle(
+                                  color: Colors.red,
                                 ),
-                              ],
+                              ),
                             ),
                           );
-                        }
                       }
                     },
                     child: const Text('Sign in'),

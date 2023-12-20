@@ -1,9 +1,13 @@
-import 'package:elibrary/pages/detail_buku_page.dart';
+import 'dart:convert';
+
+import 'package:elibrary/pages/authentication/login_user.dart';
+import 'package:elibrary/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import '../data/model/home_book_model.dart';
+import 'package:http/http.dart' as http;
 
 class BookBottomSheet extends StatelessWidget {
-  final Fields book;
+  final Book book;
 
   const BookBottomSheet({super.key, required this.book});
 
@@ -11,10 +15,10 @@ class BookBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     String newRating;
 
-    if (book.ratingCount == 0) {
+    if (book.fields.ratingCount == 0) {
       newRating = 'No rating';
     } else {
-      newRating = '${book.rating}';
+      newRating = '${book.fields.rating}';
     }
 
     return Container(
@@ -51,8 +55,11 @@ class BookBottomSheet extends StatelessWidget {
                       width: 125,
                       color: Colors.grey,
                       child: Image.network(
-                        'https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg',
+                        'https://covers.openlibrary.org/b/isbn/${book.fields.isbn}-L.jpg',
                         fit: BoxFit.fitWidth,
+                        errorBuilder: (context, _, __) {
+                          return const Center(child: Text('No Image'));
+                        },
                       ),
                     ),
                   ),
@@ -64,14 +71,14 @@ class BookBottomSheet extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          book.title,
+                          book.fields.title,
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 18,
                           ),
                         ),
-                        Text(book.authors),
-                        Divider(),
+                        Text(book.fields.authors),
+                        const Divider(),
                         Text('Rating: $newRating'),
                       ],
                     ),
@@ -84,24 +91,58 @@ class BookBottomSheet extends StatelessWidget {
             padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
             child: SizedBox(
               width: double.maxFinite,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DetailBukuPage(book: book)),
-                  );
-                },
-                icon: const Icon(Icons.info_outline_rounded),
-                label: const Text('Detail'),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.black),
-                  foregroundColor: MaterialStateProperty.all(Colors.white),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () async {
+                        Uri url = Uri.parse(
+                            "http://${baseUrl}progress_literasi/read-book-mobile/");
+                        final data = jsonEncode({
+                          'book_id': book.pk,
+                          'user_id': CurrUserData.userId!,
+                        });
+                        await http.post(url, body: data);
+                      },
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.black),
+                        overlayColor:
+                            MaterialStateProperty.resolveWith<Color>((states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            return Colors.black.withOpacity(.1);
+                          }
+                          return Colors.transparent;
+                        }),
+                      ),
+                      child: const Text('Read'),
                     ),
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.info_outline_rounded),
+                      label: const Text('Detail'),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.black),
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

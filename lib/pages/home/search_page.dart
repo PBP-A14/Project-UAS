@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 import '../../utils/enum_resultstate.dart';
 import '../../widgets/book_card.dart';
 
-//TODO: Kalo pop reset data
-
 class SearchPage extends StatefulWidget {
   static const routeName = '/search';
 
@@ -83,7 +81,7 @@ class _SearchPageState extends State<SearchPage> {
                                       icon: const Icon(Icons.clear),
                                       onPressed: () {
                                         _controller.clear();
-                                        fields = _controller.text;
+                                        // fields = _controller.text;
                                       },
                                     )
                                   : null,
@@ -128,6 +126,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
               ),
+              const Divider(),
               Expanded(
                 child: Consumer<SearchProvider>(
                   builder: (context, data, _) {
@@ -215,7 +214,7 @@ class _SearchPageState extends State<SearchPage> {
                               shrinkWrap: true,
                               children:
                                   List.generate(data.result.length, (index) {
-                                var book = data.result[index].fields;
+                                var book = data.result[index];
                                 return BookCard(
                                   book: book,
                                 );
