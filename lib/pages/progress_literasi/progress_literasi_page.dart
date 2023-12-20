@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:elibrary/auth/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:elibrary/utils/base_url.dart';
 
 int _target = 0;
 
@@ -89,7 +90,7 @@ class _TextProgressWidgetState extends State<TextProgressWidget> {
 
     try {
       final response = await request.get(
-        'http://127.0.0.1:8000/progress_literasi/get_text_mobile/',
+        '${baseUrl}progress_literasi/get_text_mobile/',
         // Add any necessary headers, like authentication headers, if required
       );
 

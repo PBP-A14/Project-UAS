@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../../auth/auth.dart';
 
 class PasswordFormPage extends StatefulWidget {
-
   const PasswordFormPage({super.key});
 
   @override
@@ -167,12 +166,11 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                           newPassword1.isNotEmpty ||
                           newPassword2.isNotEmpty) {
                         final response = await request.post(
-                            "http://${baseUrl}my_profile/change_password_mobile/",
-                            {
-                              'old_password': oldPPassword,
-                              'new_password1': newPassword1,
-                              'new_password2': newPassword2,
-                            });
+                            "${baseUrl}my_profile/change_password_mobile/", {
+                          'old_password': oldPPassword,
+                          'new_password1': newPassword1,
+                          'new_password2': newPassword2,
+                        });
 
                         if (response['status'] == true) {
                           String message = response['success'];

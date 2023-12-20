@@ -19,7 +19,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   Future<List<Book>> fetchProduct(BuildContext context) async {
     final request = context.watch<CookieRequest>();
-    var url = 'http://${baseUrl}my_profile/get_reading_history_json/';
+    var url = '${baseUrl}my_profile/get_reading_history_json/';
     var response = await request.get(url);
     // print(response);
     var data = [...response];
@@ -71,16 +71,17 @@ class _ProfilePageState extends State<ProfilePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                               ElevatedButton(
+                              ElevatedButton(
                                   onPressed: () => Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => const ProfileDetail())),
+                                          builder: (context) =>
+                                              const ProfileDetail())),
                                   child: Text('View Details')),
                               ElevatedButton(
                                 onPressed: () async {
                                   final response = await request.logout(
-                                      "http://${baseUrl}authentication/mobile-logout/");
+                                      "${baseUrl}authentication/mobile-logout/");
                                   String message = response["message"];
                                   if (response['status']) {
                                     String uname = response["username"];
@@ -128,7 +129,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         ListView.builder(
                           shrinkWrap: true,
-                          itemCount: snapshot.data!.length > 5 ? 5 : snapshot.data!.length,
+                          itemCount: snapshot.data!.length > 5
+                              ? 5
+                              : snapshot.data!.length,
                           itemBuilder: (context, index) =>
                               BookTile(book: snapshot.data![index]),
                         ),
@@ -146,12 +149,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                 onPressed: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const ProfileDetail())),
+                                        builder: (context) =>
+                                            const ProfileDetail())),
                                 child: Text('View Details')),
                             ElevatedButton(
                               onPressed: () async {
                                 final response = await request.logout(
-                                    "http://${baseUrl}authentication/mobile-logout/");
+                                    "${baseUrl}authentication/mobile-logout/");
                                 String message = response["message"];
                                 if (response['status']) {
                                   String uname = response["username"];

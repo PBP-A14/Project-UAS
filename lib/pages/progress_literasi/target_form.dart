@@ -33,80 +33,79 @@ class _TargetFormPage extends State<TargetFormPage> {
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      hintText: "Target Buku",
-                      labelText: "Target Buku",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                    onChanged: (String? value) {
-                      setState(() {
-                        try {
-                        _target = int.parse(value!);
-                        } catch (e) {
-                          print('Error parsing value: $value');
-                        }
-                        });
-                    },
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return "Target Buku tidak boleh kosong!";
-                      }
-                      if (int.tryParse(value) == null) {
-                        return "Target Buku harus berupa angka!";
-                      }
-                      return null;
-                    },
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Target Buku",
+                  labelText: "Target Buku",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                      onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                              // Kirim ke Django dan tunggu respons
-                              final response = await request.postJson(
-                              "http://${baseUrl}progress_literasi/set_target_flutter/",
-                              jsonEncode(<String, String>{
-                                  'Target Buku': _target.toString(),
-                              }));
-                              
-                              print(response);
-                              if (response['status'] == 'success') {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                  content: Text("Target baru berhasil disimpan!"),
-                                  ));
-                                  Navigator.pop(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => ProgressLiterasiPage()),
-                                  );
-                              } else {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                      content:
-                                          Text("Terdapat kesalahan, silakan coba lagi."),
-                                  ));
-                              }
-                          }
-                      },
-                      child: const Text(
-                        "Save",
-                      ),
-                    ),
+                onChanged: (String? value) {
+                  setState(() {
+                    try {
+                      _target = int.parse(value!);
+                    } catch (e) {
+                      print('Error parsing value: $value');
+                    }
+                  });
+                },
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Target Buku tidak boleh kosong!";
+                  }
+                  if (int.tryParse(value) == null) {
+                    return "Target Buku harus berupa angka!";
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      // Kirim ke Django dan tunggu respons
+                      final response = await request.postJson(
+                          "${baseUrl}progress_literasi/set_target_flutter/",
+                          jsonEncode(<String, String>{
+                            'Target Buku': _target.toString(),
+                          }));
+
+                      print(response);
+                      if (response['status'] == 'success') {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text("Target baru berhasil disimpan!"),
+                        ));
+                        Navigator.pop(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProgressLiterasiPage()),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content:
+                              Text("Terdapat kesalahan, silakan coba lagi."),
+                        ));
+                      }
+                    }
+                  },
+                  child: const Text(
+                    "Save",
                   ),
                 ),
-            ]
-          ),
+              ),
+            ),
+          ]),
         ),
       ),
     );
