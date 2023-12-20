@@ -144,11 +144,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         password2.isNotEmpty) {
                       if (password1 == password2) {
                         final response = await request.register(
-                            "http://${baseUrl}authentication/mobile-register/",
-                            {
-                              'username': username,
-                              'password': password1,
-                            });
+                            "${baseUrl}authentication/mobile-register/", {
+                          'username': username,
+                          'password': password1,
+                        });
                         if (request.registered) {
                           if (mounted) {
                             String message = response['message'];

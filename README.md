@@ -1,3 +1,5 @@
+[![Build status](https://build.appcenter.ms/v0.1/apps/7260b95e-f6d9-46ac-9045-9efb3c159e08/branches/main/badge)](https://appcenter.ms)
+
 # elibrary Project UAS
 
 A new Flutter project.

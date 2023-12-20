@@ -1,1 +1,1 @@
-var baseUrl = '127.0.0.1:8000/';
+var baseUrl = 'https://elibrary-a14-tk.pbp.cs.ui.ac.id/';
