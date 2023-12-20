@@ -1,3 +1,8 @@
+[![Staging](https://github.com/PBP-A14/elibrary/actions/workflows/staging.yml/badge.svg)](https://github.com/PBP-A14/elibrary/actions/workflows/staging.yml/badge.svg)
+[![Pre-Release](https://github.com/PBP-A14/elibrary/actions/workflows/pre-release.yml/badge.svg)](https://github.com/PBP-A14/elibrary/actions/workflows/pre-release.yml/badge.svg)
+[![Release](https://github.com/PBP-A14/elibrary/actions/workflows/release.yml/badge.svg)](https://github.com/PBP-A14/elibrary/actions/workflows/release.yml/badge.svg)
+[![Build status](https://build.appcenter.ms/v0.1/apps/7260b95e-f6d9-46ac-9045-9efb3c159e08/branches/main/badge)](https://appcenter.ms)
+
 # elibrary Project UAS
 
 A new Flutter project.
@@ -24,6 +29,8 @@ Sarah Nazly Nuraya - 2206082581
 <details>
 <Summary>Link Deployment :</summary>
 <br>
+
+install.appcenter.ms/orgs/elibrary/apps/elibrary/distribution_groups/public
 
 </br>
 </details>
@@ -79,11 +86,11 @@ b.) Search Bar
 ##
 **Modul Admin : Mika Ahmad Al Husseini**
 ###
-a.) Add, Remove, dan Edit Buku
+a.) Add Buku
 
-b.) Melihat Data dan Hapus Akun User
+b.) Menampilkan data user
 
-c.) Melihat Log
+c.) Menghapus akun user
 
 d.) Modul Admin hanya dapat diakses oleh Admin
 ##

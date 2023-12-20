@@ -2,15 +2,10 @@ import 'package:elibrary/data/model/home_book_model.dart';
 import 'package:elibrary/pages/authentication/login_page.dart';
 import 'package:elibrary/pages/authentication/login_user.dart';
 import 'package:elibrary/pages/progress_literasi/progress_literasi_page.dart';
+import 'package:elibrary/utils/base_url.dart';
 import 'package:elibrary/widgets/book_tile.dart';
 import 'package:elibrary/widgets/password_form.dart';
 import 'package:flutter/material.dart';
-import 'package:elibrary/navigation_menu.dart';
-import 'package:elibrary/pages/authentication/login_user.dart';
-import 'package:elibrary/pages/authentication/register_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-// import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import '../../auth/auth.dart';
 
@@ -21,17 +16,17 @@ class ProfileDetail extends StatelessWidget {
     String username = CurrUserData.username!;
     final request = context.watch<CookieRequest>();
     Future<List<Book>> fetchProduct(BuildContext context) async {
-      var url = 'http://127.0.0.1:8000/my_profile/get_reading_history_json/';
+      var url = '${baseUrl}my_profile/get_reading_history_json/';
       var res = await request.get(url);
       var data = [...res];
 
-      List<Book> list_product = [];
+      List<Book> listProduct = [];
       for (var d in data) {
         if (d != null) {
-          list_product.add(Book.fromJson(d));
+          listProduct.add(Book.fromJson(d));
         }
       }
-      return list_product;
+      return listProduct;
     }
 
     return Scaffold(
@@ -134,8 +129,8 @@ class ProfileDetail extends StatelessWidget {
                 // Logout button
                 ElevatedButton(
                   onPressed: () async {
-                    final response = await request.logout(
-                        "http://127.0.0.1:8000/authentication/mobile-logout/");
+                    final response = await request
+                        .logout("${baseUrl}authentication/mobile-logout/");
                     String message = response["message"];
                     if (response['status']) {
                       String uname = response["username"];

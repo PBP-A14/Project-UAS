@@ -1,6 +1,6 @@
+import 'package:elibrary/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import 'package:elibrary/navigation_menu.dart';
-// import 'package:pbp_django_auth/pbp_django_auth.dart';
 import '../../auth/auth.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
@@ -208,13 +208,11 @@ class _AddBookFormPageState extends State<AddBookFormPage> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         // Kirim ke Django dan tunggu respons
-                        // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                         final response = await request.postJson(
-                            "http://127.0.0.1:8000/admin_app/create_flutter/",
+                            "${baseUrl}admin_app/create_flutter/",
                             jsonEncode(<String, String>{
                               'title': _title,
                               'description': _description,
-                              // TODO: Sesuaikan field data sesuai dengan aplikasimu
                               'authors': _authors,
                               'isbn': _isbn,
                               'numPages': _numPages.toString(),

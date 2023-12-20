@@ -2,16 +2,12 @@ import 'package:elibrary/data/model/home_book_model.dart';
 import 'package:elibrary/pages/authentication/login_page.dart';
 import 'package:elibrary/pages/authentication/login_user.dart';
 import 'package:elibrary/pages/profile/profile_detail_page.dart';
-import 'package:elibrary/pages/progress_literasi/progress_literasi_page.dart';
+import 'package:elibrary/utils/base_url.dart';
 import 'package:elibrary/widgets/book_tile.dart';
 import 'package:elibrary/widgets/password_form.dart';
 import 'package:flutter/material.dart';
-// import 'dart:convert';
-// import 'package:http/http.dart' as http;
-// import 'package:pbp_django_auth/pbp_django_auth.dart';
 import '../../../auth/auth.dart';
 import 'package:provider/provider.dart';
-// import 'dart:developer';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -23,20 +19,20 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   Future<List<Book>> fetchProduct(BuildContext context) async {
     final request = context.watch<CookieRequest>();
-    var url = 'http://127.0.0.1:8000/my_profile/get_reading_history_json/';
+    var url = '${baseUrl}my_profile/get_reading_history_json/';
     var response = await request.get(url);
     // print(response);
     var data = [...response];
     // print(data.runtimeType);
 
-    List<Book> list_product = [];
+    List<Book> listProduct = [];
     for (var d in data) {
       if (d != null) {
-        list_product.add(Book.fromJson(d));
+        listProduct.add(Book.fromJson(d));
       }
     }
     // print(list_product);
-    return list_product;
+    return listProduct;
   }
 
   @override
@@ -45,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final request = context.watch<CookieRequest>();
     return Scaffold(
         appBar: AppBar(
-          title: Text('Hello, ${uname}'),
+          title: Text('Hello, $uname'),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -80,12 +76,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const PasswordFormPage())),
-                                  child: Text('Change Password')),
+                                              const ProfileDetail())),
+                                  child: Text('View Details')),
                               ElevatedButton(
                                 onPressed: () async {
                                   final response = await request.logout(
-                                      "http://127.0.0.1:8000/authentication/mobile-logout/");
+                                      "${baseUrl}authentication/mobile-logout/");
                                   String message = response["message"];
                                   if (response['status']) {
                                     String uname = response["username"];
@@ -133,7 +129,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         ListView.builder(
                           shrinkWrap: true,
-                          itemCount: snapshot.data!.length > 5 ? 5 : snapshot.data!.length,
+                          itemCount: snapshot.data!.length > 5
+                              ? 5
+                              : snapshot.data!.length,
                           itemBuilder: (context, index) =>
                               BookTile(book: snapshot.data![index]),
                         ),
@@ -151,12 +149,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                 onPressed: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const ProfileDetail())),
+                                        builder: (context) =>
+                                            const ProfileDetail())),
                                 child: Text('View Details')),
                             ElevatedButton(
                               onPressed: () async {
                                 final response = await request.logout(
-                                    "http://127.0.0.1:8000/authentication/mobile-logout/");
+                                    "${baseUrl}authentication/mobile-logout/");
                                 String message = response["message"];
                                 if (response['status']) {
                                   String uname = response["username"];

@@ -1,3 +1,4 @@
+import 'package:elibrary/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -15,8 +16,7 @@ class AdminAppPage extends StatefulWidget {
 
 class _AdminAppPageState extends State<AdminAppPage> {
   Future<List<User>> fetchUser() async {
-    // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-    var url = Uri.parse('http://127.0.0.1:8000/admin_app/user_json/');
+    var url = Uri.parse('${baseUrl}admin_app/user_json/');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -37,8 +37,8 @@ class _AdminAppPageState extends State<AdminAppPage> {
 
   void deleteUser(int id, CookieRequest cookieRequest) async {
     try {
-      final response = await cookieRequest
-          .post('http://127.0.0.1:8000/admin_app/delete_user/$id/', {});
+      final response =
+          await cookieRequest.post('${baseUrl}admin_app/delete_user/$id/', {});
       if (response['status'] == 'success') {
         setState(() {});
       }

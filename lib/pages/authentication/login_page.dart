@@ -1,9 +1,9 @@
 import 'package:elibrary/navigation_menu.dart';
 import 'package:elibrary/pages/authentication/login_user.dart';
 import 'package:elibrary/pages/authentication/register_page.dart';
+import 'package:elibrary/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import '../../auth/auth.dart';
 
@@ -126,22 +126,21 @@ class _LoginPageState extends State<LoginPage> {
                       String password = _passwordController.text;
 
                       if (username.isNotEmpty || password.isNotEmpty) {
-                        // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-                        final response = await request.login(
-                            "http://127.0.0.1:8000/authentication/mobile-login/",
-                            {
-                              'username': username,
-                              'password': password,
-                            });
+                        final response = await request
+                            .login("${baseUrl}authentication/mobile-login/", {
+                          'username': username,
+                          'password': password,
+                        });
 
                         if (request.loggedIn) {
                           String message = response['message'];
                           String uname = response['username'];
                           int userId = response['user_id'];
-                          CurrUserData.user_id = userId;
+                          bool isAdmin = response['is_admin'];
+                          CurrUserData.userId = userId;
                           CurrUserData.username = username;
-                          // print(CurrUserData.user_id);
-                          // print(CurrUserData.username);
+                          CurrUserData.isAdmin = isAdmin;
+                          // print(isAdmin);
                           if (mounted) {
                             Navigator.pushReplacementNamed(
                                 context, NavigationMenu.routeName);

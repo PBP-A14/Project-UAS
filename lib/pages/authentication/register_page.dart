@@ -1,3 +1,4 @@
+import 'package:elibrary/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -142,13 +143,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         password1.isNotEmpty ||
                         password2.isNotEmpty) {
                       if (password1 == password2) {
-                        // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                         final response = await request.register(
-                            "http://127.0.0.1:8000/authentication/mobile-register/",
-                            {
-                              'username': username,
-                              'password': password1,
-                            });
+                            "${baseUrl}authentication/mobile-register/", {
+                          'username': username,
+                          'password': password1,
+                        });
                         if (request.registered) {
                           if (mounted) {
                             String message = response['message'];

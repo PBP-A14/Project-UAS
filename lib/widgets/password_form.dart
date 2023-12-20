@@ -1,15 +1,10 @@
-import 'package:elibrary/navigation_menu.dart';
-import 'package:elibrary/pages/authentication/login_user.dart';
-import 'package:elibrary/pages/authentication/register_page.dart';
+import 'package:elibrary/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import '../../auth/auth.dart';
 
 class PasswordFormPage extends StatefulWidget {
-  static const routeName = '/login';
-
   const PasswordFormPage({super.key});
 
   @override
@@ -17,9 +12,9 @@ class PasswordFormPage extends StatefulWidget {
 }
 
 class _PasswordFormPageState extends State<PasswordFormPage> {
-  TextEditingController _old_passwordController = TextEditingController();
-  TextEditingController _new_password1 = TextEditingController();
-  TextEditingController _new_password2 = TextEditingController();
+  TextEditingController oldPasswordController = TextEditingController();
+  TextEditingController newPassword1Controller = TextEditingController();
+  TextEditingController newPassword2Controller = TextEditingController();
   bool _isObscure = true;
   bool _isObscure2 = true;
   bool _isObscure3 = true;
@@ -35,38 +30,40 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: Row(
-              children: [
-                Image.asset(
-                  'assets/images/E-Lib.png',
-                  scale: 24,
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Change Password'),
-                ),
-              ],
-            ),
-            centerTitle: false,
             automaticallyImplyLeading: false,
+            centerTitle: false,
+            title: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.chevron_left),
+                  Text(
+                    'Back',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Padding(
-                padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
+                padding: EdgeInsets.all(12.0),
                 child: Text(
                   'Change your password here',
                   style: TextStyle(
-                    fontSize: 36,
                     fontWeight: FontWeight.w600,
+                    fontSize: 22,
                   ),
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(12, 0, 12, 12),
-                child: Text('Fill all the fields'),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 6, 12, 12),
@@ -74,7 +71,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                   elevation: 2,
                   borderRadius: BorderRadius.circular(12),
                   child: TextField(
-                    controller: _old_passwordController,
+                    controller: oldPasswordController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.lock_outline),
                       hintText: 'Old Password',
@@ -99,7 +96,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                   elevation: 2,
                   borderRadius: BorderRadius.circular(12),
                   child: TextField(
-                    controller: _new_password1,
+                    controller: newPassword1Controller,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.lock_outline),
                       hintText: 'New Password',
@@ -124,7 +121,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                   elevation: 2,
                   borderRadius: BorderRadius.circular(12),
                   child: TextField(
-                    controller: _new_password2,
+                    controller: newPassword2Controller,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.lock_outline),
                       hintText: 'Re-renter new Password',
@@ -161,21 +158,19 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                     //   Navigator.pushReplacementNamed(context, NavigationMenu.routeName);
                     // },
                     onPressed: () async {
-                      String old_password = _old_passwordController.text;
-                      String new_password1 = _new_password1.text;
-                      String new_password2 = _new_password2.text;
+                      String oldPPassword = oldPasswordController.text;
+                      String newPassword1 = newPassword1Controller.text;
+                      String newPassword2 = newPassword2Controller.text;
 
-                      if (old_password.isNotEmpty ||
-                          new_password1.isNotEmpty ||
-                          new_password2.isNotEmpty) {
-                        // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+                      if (oldPPassword.isNotEmpty ||
+                          newPassword1.isNotEmpty ||
+                          newPassword2.isNotEmpty) {
                         final response = await request.post(
-                            "http://127.0.0.1:8000/my_profile/change_password_mobile/",
-                            {
-                              'old_password': old_password,
-                              'new_password1': new_password1,
-                              'new_password2': new_password2,
-                            });
+                            "${baseUrl}my_profile/change_password_mobile/", {
+                          'old_password': oldPPassword,
+                          'new_password1': newPassword1,
+                          'new_password2': newPassword2,
+                        });
 
                         if (response['status'] == true) {
                           String message = response['success'];
@@ -191,9 +186,9 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                           }
                         } else {
                           if (mounted) {
-                            _old_passwordController.clear();
-                            _new_password1.clear();
-                            _new_password2.clear();
+                            oldPasswordController.clear();
+                            newPassword1Controller.clear();
+                            newPassword2Controller.clear();
                             ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()
                               ..showSnackBar(
@@ -201,7 +196,7 @@ class _PasswordFormPageState extends State<PasswordFormPage> {
                                   backgroundColor: Color(0xFFFFDCE0),
                                   behavior: SnackBarBehavior.floating,
                                   content: Text(
-                                    """Old Password is wrong or New Passwor didn't meet the requirements!\nPlease try again!\n
+                                    """Old Password is wrong or New Password didn't meet the requirements!\nPlease try again!\n
                                     Requirements:\n
                                     1. Password must be at least 8 characters.\n
                                     2. Password must contain at least 1 number.\n """,
