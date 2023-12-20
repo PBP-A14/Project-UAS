@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:elibrary/data/model/home_book_model.dart';
 import 'package:http/http.dart' as http;
+import '../../utils/base_url.dart';
 
 class ApiService {
-  static const baseUrl = '127.0.0.1:8000/';
   static const jsonUrl = 'json/';
   static const searchUrl = 'search/';
   static const filterAZUrl = 'json/a-z/';

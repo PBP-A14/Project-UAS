@@ -1,4 +1,5 @@
 class CurrUserData {
-  static int? user_id;
+  static int? userId;
   static String? username;
+  static bool? isAdmin;
 }
