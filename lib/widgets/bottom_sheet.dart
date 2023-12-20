@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:elibrary/pages/authentication/login_user.dart';
 import 'package:elibrary/pages/detail_buku/detail_buku.dart';
+import 'package:elibrary/pages/detail_buku_page.dart';
 import 'package:flutter/material.dart';
 import '../data/model/home_book_model.dart';
 import 'package:http/http.dart' as http;
-// TODO: Overflow tp gtw dimana?
 
 class BookBottomSheet extends StatelessWidget {
   final Book book;
 
-  const BookBottomSheet({super.key, required this.book});
+  const BookBottomSheet({Key? key, required this.book});
 
   @override
   Widget build(BuildContext context) {
@@ -92,63 +92,24 @@ class BookBottomSheet extends StatelessWidget {
             padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
             child: SizedBox(
               width: double.maxFinite,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () async {
-                        Uri url = Uri.parse(
-                            "http://127.0.0.1:8000/progress_literasi/read-book-mobile/");
-                        final data = jsonEncode({
-                          'book_id': book.pk,
-                          'user_id': CurrUserData.user_id!,
-                        });
-                        await http.post(url, body: data);
-                      },
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                        ),
-                        foregroundColor:
-                            MaterialStateProperty.all(Colors.black),
-                        overlayColor:
-                            MaterialStateProperty.resolveWith<Color>((states) {
-                          if (states.contains(MaterialState.pressed)) {
-                            return Colors.black.withOpacity(.1);
-                          }
-                          return Colors.transparent;
-                        }),
-                      ),
-                      child: const Text('Read'),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DetailBukuPage(book: book)),
+                  );
+                },
+                icon: const Icon(Icons.info_outline_rounded),
+                label: const Text('Detail'),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.black),
+                  foregroundColor: MaterialStateProperty.all(Colors.white),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => DetailBukuPage(book: this.book,)),
-                        );
-                      },
-                      icon: const Icon(Icons.info_outline_rounded),
-                      label: const Text('Detail'),
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.black),
-                        foregroundColor:
-                            MaterialStateProperty.all(Colors.white),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
