@@ -139,7 +139,7 @@ class _TargetBukuWidgetState extends State<TargetBukuWidget> {
   Future<int> fetchTargetValue(BuildContext context) async {
     final request = context.watch<CookieRequest>();
     var response = await request.get(
-      'http://127.0.0.1:8000/progress_literasi/show_json/',
+      '${baseUrl}progress_literasi/show_json/',
     );
 
     if (response.length > 0) {
@@ -155,7 +155,7 @@ class _TargetBukuWidgetState extends State<TargetBukuWidget> {
     final request = Provider.of<CookieRequest>(context, listen: false);
     try {
       var response = await request.post(
-        'http://127.0.0.1:8000/progress_literasi/reset_mobile/',
+        '${baseUrl}progress_literasi/reset_mobile/',
         {
           'Target Buku': _target.toString(),
         },
@@ -321,7 +321,7 @@ class ReadingHistoryWidget extends StatefulWidget {
 class _ReadingHistoryWidgetState extends State<ReadingHistoryWidget> {
   Future<List<Book>> fetchProduct(BuildContext context) async {
     final request = context.watch<CookieRequest>();
-    var url = 'http://127.0.0.1:8000/my_profile/get_reading_history_json/';
+    var url = '${baseUrl}my_profile/get_reading_history_json/';
     var response = await request.get(url);
     var data = [...response];
 
