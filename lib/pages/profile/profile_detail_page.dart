@@ -16,7 +16,7 @@ class ProfileDetail extends StatelessWidget {
     String username = CurrUserData.username!;
     final request = context.watch<CookieRequest>();
     Future<List<Book>> fetchProduct(BuildContext context) async {
-      var url = 'http://${baseUrl}my_profile/get_reading_history_json/';
+      var url = '${baseUrl}my_profile/get_reading_history_json/';
       var res = await request.get(url);
       var data = [...res];
 
@@ -129,8 +129,8 @@ class ProfileDetail extends StatelessWidget {
                 // Logout button
                 ElevatedButton(
                   onPressed: () async {
-                    final response = await request.logout(
-                        "http://${baseUrl}authentication/mobile-logout/");
+                    final response = await request
+                        .logout("${baseUrl}authentication/mobile-logout/");
                     String message = response["message"];
                     if (response['status']) {
                       String uname = response["username"];

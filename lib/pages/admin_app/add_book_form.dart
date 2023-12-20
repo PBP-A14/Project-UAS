@@ -209,7 +209,7 @@ class _AddBookFormPageState extends State<AddBookFormPage> {
                       if (_formKey.currentState!.validate()) {
                         // Kirim ke Django dan tunggu respons
                         final response = await request.postJson(
-                            "http://${baseUrl}admin_app/create_flutter/",
+                            "${baseUrl}admin_app/create_flutter/",
                             jsonEncode(<String, String>{
                               'title': _title,
                               'description': _description,

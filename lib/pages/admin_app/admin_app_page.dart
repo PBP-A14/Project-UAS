@@ -16,7 +16,7 @@ class AdminAppPage extends StatefulWidget {
 
 class _AdminAppPageState extends State<AdminAppPage> {
   Future<List<User>> fetchUser() async {
-    var url = Uri.parse('http://${baseUrl}admin_app/user_json/');
+    var url = Uri.parse('${baseUrl}admin_app/user_json/');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -37,8 +37,8 @@ class _AdminAppPageState extends State<AdminAppPage> {
 
   void deleteUser(int id, CookieRequest cookieRequest) async {
     try {
-      final response = await cookieRequest
-          .post('http://${baseUrl}admin_app/delete_user/$id/', {});
+      final response =
+          await cookieRequest.post('${baseUrl}admin_app/delete_user/$id/', {});
       if (response['status'] == 'success') {
         setState(() {});
       }

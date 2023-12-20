@@ -10,8 +10,7 @@ class ApiService {
   static const filterZAUrl = 'json/z-a/';
 
   Future<List<Book>> getBook() async {
-    var url = Uri.parse(
-        'http://$baseUrl$jsonUrl');
+    var url = Uri.parse('$baseUrl$jsonUrl');
     final response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -33,8 +32,7 @@ class ApiService {
   }
 
   Future<List<Book>> getBookAZ() async {
-    var url = Uri.parse(
-        'http://$baseUrl$filterAZUrl');
+    var url = Uri.parse('http://$baseUrl$filterAZUrl');
     final response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -56,8 +54,7 @@ class ApiService {
   }
 
   Future<List<Book>> getBookZA() async {
-    var url = Uri.parse(
-        'http://$baseUrl$filterZAUrl');
+    var url = Uri.parse('http://$baseUrl$filterZAUrl');
     final response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -79,8 +76,7 @@ class ApiService {
   }
 
   Future<List<Book>> searchBook(query) async {
-    var url = Uri.parse(
-        'http://$baseUrl$searchUrl$query/');
+    var url = Uri.parse('http://$baseUrl$searchUrl$query/');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},

@@ -97,7 +97,7 @@ class BookBottomSheet extends StatelessWidget {
                     child: OutlinedButton(
                       onPressed: () async {
                         Uri url = Uri.parse(
-                            "http://${baseUrl}progress_literasi/read-book-mobile/");
+                            "${baseUrl}progress_literasi/read-book-mobile/");
                         final data = jsonEncode({
                           'book_id': book.pk,
                           'user_id': CurrUserData.userId!,

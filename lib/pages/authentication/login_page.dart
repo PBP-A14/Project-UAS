@@ -126,12 +126,11 @@ class _LoginPageState extends State<LoginPage> {
                       String password = _passwordController.text;
 
                       if (username.isNotEmpty || password.isNotEmpty) {
-                        final response = await request.login(
-                            "http://${baseUrl}authentication/mobile-login/",
-                            {
-                              'username': username,
-                              'password': password,
-                            });
+                        final response = await request
+                            .login("${baseUrl}authentication/mobile-login/", {
+                          'username': username,
+                          'password': password,
+                        });
 
                         if (request.loggedIn) {
                           String message = response['message'];
