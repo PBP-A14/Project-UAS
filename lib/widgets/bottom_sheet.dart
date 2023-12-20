@@ -5,6 +5,7 @@ import 'package:elibrary/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import '../data/model/home_book_model.dart';
 import 'package:http/http.dart' as http;
+import '../pages/detail_buku_page.dart';
 
 class BookBottomSheet extends StatelessWidget {
   final Book book;
@@ -128,7 +129,7 @@ class BookBottomSheet extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => DetailBukuPage(book: book)),
+                          MaterialPageRoute(builder: (context) => DetailBukuPage(book: book.fields)),
                         );
                       },
                       icon: const Icon(Icons.info_outline_rounded),
