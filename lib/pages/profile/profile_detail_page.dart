@@ -92,12 +92,12 @@ class ProfileDetail extends StatelessWidget {
                         "Tidak ada data produk.",
                         style: TextStyle(color: Colors.grey, fontSize: 20),
                       ),
-                      // ElevatedButton(
-                      //     onPressed: () => Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: (context) => const PasswordFormPage())),
-                      //     child: Text('Change Password')),
+                      ElevatedButton(
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const PasswordFormPage())),
+                          child: Text('Change Password')),
                     ],
                   ));
                 } else {
