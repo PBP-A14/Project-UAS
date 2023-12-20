@@ -79,11 +79,11 @@ b.) Search Bar
 ##
 **Modul Admin : Mika Ahmad Al Husseini**
 ###
-a.) Add, Remove, dan Edit Buku
+a.) Add Buku
 
-b.) Melihat Data dan Hapus Akun User
+b.) Menampilkan data user
 
-c.) Melihat Log
+c.) Menghapus akun user
 
 d.) Modul Admin hanya dapat diakses oleh Admin
 ##
