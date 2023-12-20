@@ -110,9 +110,9 @@ class BookBottomSheet extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12)),
                         ),
                         foregroundColor:
-                            MaterialStateProperty.all(Colors.black),
+                        MaterialStateProperty.all(Colors.black),
                         overlayColor:
-                            MaterialStateProperty.resolveWith<Color>((states) {
+                        MaterialStateProperty.resolveWith<Color>((states) {
                           if (states.contains(MaterialState.pressed)) {
                             return Colors.black.withOpacity(.1);
                           }
@@ -125,16 +125,21 @@ class BookBottomSheet extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => DetailBukuPage(book: book)),
+                        );
+                      },
                       icon: const Icon(Icons.info_outline_rounded),
                       label: const Text('Detail'),
                       style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(Colors.black),
+                        MaterialStateProperty.all(Colors.black),
                         foregroundColor:
-                            MaterialStateProperty.all(Colors.white),
+                        MaterialStateProperty.all(Colors.white),
                         shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                        MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
