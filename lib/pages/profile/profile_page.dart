@@ -71,13 +71,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              ElevatedButton(
+                               ElevatedButton(
                                   onPressed: () => Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              const PasswordFormPage())),
-                                  child: Text('Change Password')),
+                                          builder: (context) => const ProfileDetail())),
+                                  child: Text('View Details')),
                               ElevatedButton(
                                 onPressed: () async {
                                   final response = await request.logout(
