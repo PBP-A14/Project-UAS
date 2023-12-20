@@ -2,9 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:elibrary/data/api/home_api_service.dart';
 import '../utils/enum_resultstate.dart';
 
-
-//TODO: buat inisiasi randomBook sekali aja biar gak berat.
-//TODO: sama nyimpen book di ourcollections biar ga berubah2
 class HomeProvider extends ChangeNotifier {
   final ApiService apiService;
 

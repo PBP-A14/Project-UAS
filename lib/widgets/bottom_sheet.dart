@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:elibrary/pages/authentication/login_user.dart';
+import 'package:elibrary/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import '../data/model/home_book_model.dart';
 import 'package:http/http.dart' as http;
-// TODO: Overflow tp gtw dimana?
 
 class BookBottomSheet extends StatelessWidget {
   final Book book;
@@ -97,10 +97,10 @@ class BookBottomSheet extends StatelessWidget {
                     child: OutlinedButton(
                       onPressed: () async {
                         Uri url = Uri.parse(
-                            "http://127.0.0.1:8000/progress_literasi/read-book-mobile/");
+                            "http://${baseUrl}progress_literasi/read-book-mobile/");
                         final data = jsonEncode({
                           'book_id': book.pk,
-                          'user_id': CurrUserData.user_id!,
+                          'user_id': CurrUserData.userId!,
                         });
                         await http.post(url, body: data);
                       },

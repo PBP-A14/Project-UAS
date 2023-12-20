@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:elibrary/pages/progress_literasi/progress_literasi_page.dart';
+import 'package:elibrary/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import 'package:elibrary/auth/auth.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +46,6 @@ class _TargetFormPage extends State<TargetFormPage> {
                         borderRadius: BorderRadius.circular(5.0),
                       ),
                     ),
-                    // TODO: done Tambahkan variabel yang sesuai
                     onChanged: (String? value) {
                       setState(() {
                         try {
@@ -74,9 +74,8 @@ class _TargetFormPage extends State<TargetFormPage> {
                       onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                               // Kirim ke Django dan tunggu respons
-                              // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                               final response = await request.postJson(
-                              "http://127.0.0.1:8000/progress_literasi/set_target_flutter/",
+                              "http://${baseUrl}progress_literasi/set_target_flutter/",
                               jsonEncode(<String, String>{
                                   'Target Buku': _target.toString(),
                               }));
